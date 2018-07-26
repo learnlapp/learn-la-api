@@ -1,0 +1,66 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 500,
+    "max": 1000
+  },
+  "twillio": {
+    "appId": "TWILLIO_APP_ID=",
+    "apiKey": "TWILLIO_API_KEY"
+  },
+  "authentication": {
+    "secret":
+      "e3d4f6d8e94841e650adf837aa39f3bd3b37c4196eb0a5adb112449faea7483e605be01c7e3708aa1c80f685fcda3b1d9a4493a508fe66c80245590f6d2a5e7cc82bf0862f90a4cf2cda6b5ac3969e8370c58b22cccc1ada5f7badcb0ffaacae76f1f024f4a684cf9f1adbdbe899506ff92856aadeea7c6cb1691455d74bc386ce6784ce4b026fc8e7d610ed9038cccbb15eebf5b716434023c8dae1caba2f6a39a6a790fa51bfe05d3fadfb6bf793fa738c91a684f03a9d393202aa3293e7da62e28056194f0c83ad583ae9fd86f4f8040baf1b71f3d04abaa245527c6bc9e18864e6a7ab1af36de708cadfe404edce5afdff447bed53fbd04c037d67728c04",
+    "strategies": ["facebookTokenTeacher", "jwt", "local"],
+    "path": "/authentication",
+    "service": "users",
+    "jwt": {
+      "header": {
+        "type": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "subject": "anonymous",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "entity": "user",
+      "service": "users",
+      "usernameField": "phone",
+      "passwordField": "password",
+      "entityUsernameField": "phone",
+      "entityPasswordField": "password",
+      "passReqToCallback": "true"
+    },
+    "facebookTokenTeacher": {
+      "idField": "facebookId",
+      "entity": "user",
+      "service": "users",
+      "clientID": "FACEBOOK_TEACHER_APP_ID",
+      "clientSecret": "FACEBOOK_TEACHER_APP_SECRET",
+      "scope": ["public_profile", "email"],
+      "profileFields": [
+        "id",
+        "displayName",
+        "first_name",
+        "last_name",
+        "email",
+        "gender",
+        "profileUrl",
+        "birthday",
+        "picture",
+        "permissions"
+      ]
+    },
+    "cookie": {
+      "enabled": true,
+      "name": "learnla",
+      "httpOnly": false,
+      "secure": false
+    }
+  },
+  "mongodb": "mongodb://localhost:27017/learn_la"
+}
