@@ -36,7 +36,12 @@ app.use('/', express.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(express.rest());
-app.configure(socketio());
+app.configure(
+  socketio({
+    pingInterval: 10000,
+    pingTimeout: 50000,
+  }),
+);
 
 app.configure(mongoose);
 
