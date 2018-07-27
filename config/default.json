@@ -55,6 +55,29 @@
         "permissions"
       ]
     },
+    "facebookTokenStudent": {
+      "idField": "facebookId",
+      "entity": "user",
+      "service": "users",
+      "clientID": "FACEBOOK_STUDENT_APP_ID",
+      "clientSecret": "FACEBOOK_STUDENT_APP_SECRET",
+      "scope": [
+        "public_profile",
+        "email"
+      ],
+      "profileFields": [
+        "id",
+        "displayName",
+        "first_name",
+        "last_name",
+        "email",
+        "gender",
+        "profileUrl",
+        "birthday",
+        "picture",
+        "permissions"
+      ]
+    },
     "cookie": {
       "enabled": true,
       "name": "learnla",

@@ -34,6 +34,18 @@ module.exports = function(app) {
       ),
     ),
   );
+  app.configure(˚®˚
+    oauth2(
+      Object.assign(
+        {
+          name: 'facebookTokenStudent',
+          Strategy: FacebookTokenStrategy,
+          Verifier: FacebookTokenVerifier,
+        },
+        config.facebookTokenStudent,
+      ),
+    ),
+  );
 
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
