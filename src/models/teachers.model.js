@@ -15,17 +15,13 @@ module.exports = function(app) {
 
   const teachers = new Schema(
     {
-      // name, phone, email, avatar, gender
       userId: { type: Schema.Types.ObjectId, required: true, unique: true },
 
       role: { type: String }, // personal / organization
       organization: { type: String },
-      // occupation: { type: String },
-      video: { type: String },
+
       educationLevel: { type: String },
       school: { type: String },
-      // district: { type: String },
-      // bio: { type: String },
 
       profession: { type: String },
       award: { type: String },
@@ -36,7 +32,6 @@ module.exports = function(app) {
         default: [{ days: [1, 3, 5], startTime: '09:00', endTime: '18:00' }],
       },
       courses: { type: [CourseSchema] },
-      removedCourses: { type: [CourseSchema] },
       locations: { type: [LocationSchema] },
 
       experience: { type: Number },

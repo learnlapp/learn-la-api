@@ -11,6 +11,8 @@ module.exports = function attachOrGenerateProfile() {
     let profile = {};
 
     if (platform === 'teacher') {
+      console.log('attachOrGenerateProfile.js: data', context.data);
+      console.log('attachOrGenerateProfile.js: params', context.params);
       if (user.roles.indexOf('teacher') === -1) {
         profile = await context.app
           .service('teachers')
