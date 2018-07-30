@@ -13,6 +13,7 @@ module.exports = function(app) {
       images: { type: [String] },
 
       timeslots: { type: [TimeslotSchema] },
+      timeTable: { type: [Number] },
       location: { type: LocationSchema },
       duration: { type: Number },
       fee: { type: Number },

@@ -24,6 +24,7 @@ module.exports = function(app) {
       interests: { type: [String] },
       courses: { type: [CourseSchema] },
       timeslots: { type: [TimeslotSchema] },
+      timeTable: { type: [Number] },
       locations: { type: [LocationSchema] },
 
       notifications: { type: [String], default: ['analytics', 'marketing'] },
