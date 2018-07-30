@@ -31,6 +31,7 @@ module.exports = function(app) {
         type: [TimeslotSchema],
         default: [{ days: [1, 3, 5], startTime: '09:00', endTime: '18:00' }],
       },
+      timeTable: { type: [Number] },
       courses: { type: [CourseSchema] },
       locations: { type: [LocationSchema] },
 
