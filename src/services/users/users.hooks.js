@@ -32,6 +32,7 @@ const constructPhone = require('./hooks/before/construct-phone');
 const isValidPlatform = require('./hooks/before/is-valid-platform');
 const isFacebookSignUp = require('./hooks/before/is-facebook-sign-up');
 const processDataFromFacebook = require('./hooks/before/process-data-from-facebook');
+const verifyOneTimeToken = require('./hooks/before/verify-one-time-token');
 
 // users: After hooks
 const requestSMSVerifyCode = require('./hooks/after/request-sms-verify-code');
@@ -49,7 +50,7 @@ module.exports = {
       iffElse(
         isFacebookSignUp(),
         [processDataFromFacebook()],
-        [constructPhone(), isNewUser(), hashPassword()],
+        [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()],
       ),
     ],
     update: [disallow()],

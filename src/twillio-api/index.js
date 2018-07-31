@@ -34,9 +34,12 @@ module.exports = function(app) {
           mongoose: { upsert: true },
         },
       );
+      const tokenId = oneTimeTokens[0]._id;
 
-      res.send({ ...twillioResponse, ...oneTimeTokens[0], token });
+      res.send({ ...twillioResponse, phone, tokenId, token });
     } catch (err) {
+      console.log('err');
+      // throw new BadRequest(err.message, err);
       res.send(new BadRequest(err.message, err));
     }
   });

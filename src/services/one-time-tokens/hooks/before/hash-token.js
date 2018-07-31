@@ -6,7 +6,7 @@ module.exports = function hashToken() {
     const { token } = context.data;
 
     if (!token) {
-      throw new BadRequest('Missing token');
+      throw new BadRequest('A Token is required.');
     }
 
     context.data.token = await bcrypt.hash(token, 8);

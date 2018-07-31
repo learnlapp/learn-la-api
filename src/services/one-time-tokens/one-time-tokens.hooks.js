@@ -23,12 +23,12 @@ module.exports = {
   },
 
   after: {
-    all: [discard('token')],
+    all: [iff(isProvider('external'), discard('token'))],
     find: [],
     get: [],
     create: [],
     update: [],
-    patch: [keep('phone', 'updatedAt')],
+    patch: [keep('_id', 'phone', 'updatedAt')],
     remove: [],
   },
 
