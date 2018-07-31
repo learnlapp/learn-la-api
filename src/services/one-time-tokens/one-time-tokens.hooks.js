@@ -2,34 +2,34 @@ const {
   disableMultiItemChange,
   disableMultiItemCreate,
   disallow,
+  discard,
   iff,
   isProvider,
   keep,
-  skipRemainingHooks
-} = require("feathers-hooks-common");
+  skipRemainingHooks,
+} = require('feathers-hooks-common');
 
-const genToken = require("./hooks/before/gen-token");
-const hashToken = require("./hooks/before/hash-token");
+const hashToken = require('./hooks/before/hash-token');
 
 module.exports = {
   before: {
-    all: [iff(isProvider("external"), disallow())],
+    all: [iff(isProvider('external'), disallow())],
     find: [],
     get: [],
-    create: [disableMultiItemCreate(), genToken(), hashToken()],
+    create: [hashToken()],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
-    remove: [disableMultiItemChange()]
+    patch: [hashToken()],
+    remove: [disableMultiItemChange()],
   },
 
   after: {
-    all: [],
+    all: [discard('token')],
     find: [],
     get: [],
     create: [],
     update: [],
-    patch: [],
-    remove: []
+    patch: [keep('phone', 'updatedAt')],
+    remove: [],
   },
 
   error: {
@@ -39,6 +39,6 @@ module.exports = {
     create: [],
     update: [],
     patch: [],
-    remove: []
-  }
+    remove: [],
+  },
 };

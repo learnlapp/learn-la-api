@@ -2,7 +2,7 @@
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
-module.exports = function (app) {
+module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const oneTimeTokens = new Schema(
@@ -15,6 +15,6 @@ module.exports = function (app) {
     },
   );
 
-  oneTimeTokens.index({ createdAt: 1 }, { expireAfterSeconds: 600 });
+  oneTimeTokens.index({ updatedAt: 1 }, { expireAfterSeconds: 60 });
   return mongooseClient.model('oneTimeTokens', oneTimeTokens);
 };

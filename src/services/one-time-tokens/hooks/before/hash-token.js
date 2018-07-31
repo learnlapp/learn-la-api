@@ -1,6 +1,15 @@
-module.exports = function hashToken () {
-    return async context => {
+const bcrypt = require('bcryptjs');
+const { BadRequest } = require('@feathersjs/errors');
 
-        return context;
+module.exports = function hashToken() {
+  return async context => {
+    const { token } = context.data;
+
+    if (!token) {
+      throw new BadRequest('Missing token');
     }
-}
+
+    context.data.token = await bcrypt.hash(token, 8);
+    return context;
+  };
+};
