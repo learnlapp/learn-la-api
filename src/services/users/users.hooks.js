@@ -84,11 +84,8 @@ module.exports = {
     all: [protect('password')],
     find: [
       iff(isAction('phone-sign-up'), [
-        iffElse(
-          noRecordFound(),
-          requestSMSVerifyCode(),
-          keep('_id', 'createdAt'),
-        ),
+        requestSMSVerifyCode(),
+        keep('_id', 'createdAt'),
       ]),
     ],
     get: [],
