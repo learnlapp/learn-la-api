@@ -65,7 +65,7 @@ module.exports = {
             restrictToOwner({ idField: '_id', ownerField: '_id' }),
             iffElse(
               isAction('update-phone'),
-              [verifyOneTimeToken(), constructPhone()],
+              [constructPhone(), verifyOneTimeToken()],
               [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')],
             ),
           ],

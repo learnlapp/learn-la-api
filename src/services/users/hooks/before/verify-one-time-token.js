@@ -3,28 +3,28 @@ const { BadRequest } = require('@feathersjs/errors');
 
 module.exports = function verifyOneTimeToken() {
   return async context => {
-    const { tokenId, token } = context.data;
+    const { phone, token } = context.data;
     console.log('verifying');
-    if (!tokenId || !token) {
-      throw new BadRequest('tokenId and token are required.');
+    if (!phone || !token) {
+      throw new BadRequest('phone and token are required.');
     }
 
-    const oneTimeToken = await context.app
+    const { data } = await context.app
       .service('one-time-tokens')
-      .get(tokenId);
+      .find({ query: { phone } });
 
-    if (!oneTimeToken) {
+    if (!data.length) {
       throw new BadRequest('token is not exist or expired.');
     }
 
-    const hash = oneTimeToken.token;
+    const hash = data[0].token;
     const isVerified = await bcrypt.compare(token, hash);
 
     if (!isVerified) {
-      throw new BadRequest('token invalid.');
+      throw new BadRequest('token not match.');
     }
 
-    context.app.service('one-time-tokens').remove(tokenId);
+    context.app.service('one-time-tokens').remove(data[0]._id);
     return context;
   };
 };
