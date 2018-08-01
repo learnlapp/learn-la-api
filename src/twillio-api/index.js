@@ -1,4 +1,5 @@
 const authy = require('authy');
+const RandomString = require('randomstring');
 const { promisify } = require('util');
 const { BadRequest } = require('@feathersjs/errors');
 
@@ -9,9 +10,36 @@ module.exports = function(app) {
     const verify = promisify(authy(apiKey).phones().verification_check);
 
     try {
-      const response = await verify(phoneNumber, countryCode, verifyCode);
-      res.send(response);
+      const twillioResponse = await verify(
+        phoneNumber,
+        countryCode,
+        verifyCode,
+      );
+      // NOTE: response = {
+      //   message: 'Verification code is correct.',
+      //   success: true
+      // };
+
+      const token = RandomString.generate({
+        length: 10,
+        charset: 'alphabetic',
+      });
+      const phone = countryCode.trim() + phoneNumber.trim();
+      const oneTimeTokens = await app.service('one-time-tokens').patch(
+        null,
+
+        { phone, token },
+        {
+          query: { phone },
+          mongoose: { upsert: true },
+        },
+      );
+      const tokenId = oneTimeTokens[0]._id;
+
+      res.send({ ...twillioResponse, phone, tokenId, token });
     } catch (err) {
+      console.log('err');
+      // throw new BadRequest(err.message, err);
       res.send(new BadRequest(err.message, err));
     }
   });
