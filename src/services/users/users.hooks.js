@@ -59,7 +59,11 @@ module.exports = {
       iff(isProvider('external'), [
         iffElse(
           isAction('reset-password'),
-          [verifyOneTimeToken()],
+          [
+            constructPhone(),
+            verifyOneTimeToken(),
+            preventChanges(false, 'phone', 'phoneNumber', 'countryCode'),
+          ],
           [
             authenticate('jwt'),
             restrictToOwner({ idField: '_id', ownerField: '_id' }),
