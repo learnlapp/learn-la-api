@@ -59,7 +59,11 @@ module.exports = {
       iff(isProvider('external'), [
         authenticate('jwt'),
         restrictToOwner({ idField: '_id', ownerField: '_id' }),
-        preventChanges(false, 'phone', 'phoneNumber', 'countryCode'),
+        iffElse(
+          isAction('reset-password'),
+          [constructPhone()],
+          [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')],
+        ),
       ]),
       hashPassword(),
     ],
