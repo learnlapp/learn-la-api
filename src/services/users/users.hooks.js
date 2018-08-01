@@ -57,12 +57,18 @@ module.exports = {
     patch: [
       disableMultiItemChange(),
       iff(isProvider('external'), [
-        authenticate('jwt'),
-        restrictToOwner({ idField: '_id', ownerField: '_id' }),
         iffElse(
           isAction('reset-password'),
-          [constructPhone()],
-          [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')],
+          [verifyOneTimeToken()],
+          [
+            authenticate('jwt'),
+            restrictToOwner({ idField: '_id', ownerField: '_id' }),
+            iffElse(
+              isAction('update-phone'),
+              [verifyOneTimeToken(), constructPhone()],
+              [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')],
+            ),
+          ],
         ),
       ]),
       hashPassword(),
@@ -82,13 +88,9 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [
-      generateProfile(),
-      // ctx => console.log('============> user result', ctx.result),
-      // ctx => console.log('============> user result', ctx.dispatch),
-    ],
+    create: [generateProfile()],
     update: [],
-    patch: [],
+    patch: [iff(isAction('reset-password'), keep('_id'))],
     remove: [],
   },
 
