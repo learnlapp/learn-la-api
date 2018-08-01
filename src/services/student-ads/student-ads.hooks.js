@@ -24,28 +24,29 @@ const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [pushPayloadToUser(), paramsFromClient('action', 'paginate')],
+    all: [
+      iff(isProvider('external'), [authenticate('jwt')]),
+      pushPayloadToUser(),
+      paramsFromClient('action', 'paginate'),
+    ],
     find: [],
     get: [
       iff(isProvider('external'), [
-        authenticate('jwt'),
-        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+        restrictToOwner({ idField: 'studentId', ownerField: 'studentId' }),
       ]),
     ],
-    create: [associateCurrentUser({ idField: 'teacherId', as: 'teacherId' })],
+    create: [associateCurrentUser({ idField: 'studentId', as: 'studentId' })],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
       iff(isProvider('external'), [
-        authenticate('jwt'),
-        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+        restrictToOwner({ idField: 'studentId', ownerField: 'studentId' }),
       ]),
     ],
     remove: [
       disableMultiItemChange(),
       iff(isProvider('external'), [
-        authenticate('jwt'),
-        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+        restrictToOwner({ idField: 'studentId', ownerField: 'studentId' }),
       ]),
     ],
   },
