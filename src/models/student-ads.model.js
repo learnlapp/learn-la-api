@@ -38,5 +38,5 @@ module.exports = function(app) {
     },
   );
 
-  return mongooseClient.model('studentAds', studentAds);
+  return mongooseClient.model('student-ads', studentAds);
 };

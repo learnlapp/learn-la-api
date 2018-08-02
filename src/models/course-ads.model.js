@@ -11,6 +11,7 @@ module.exports = function(app) {
       level: { type: Number },
       description: { type: String },
       images: { type: [String] },
+      experience: { type: Number },
 
       timeslots: { type: [TimeslotSchema] },
       timeTable: { type: [Number] },
@@ -38,5 +39,5 @@ module.exports = function(app) {
     },
   );
 
-  return mongooseClient.model('courseAds', courseAds);
+  return mongooseClient.model('course-ads', courseAds);
 };
