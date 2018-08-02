@@ -25,8 +25,7 @@ const resolvers = require('./resolvers');
 module.exports = {
   before: {
     all: [
-      iff(isProvider('external'), [authenticate('jwt')]),
-      pushPayloadToUser(),
+      iff(isProvider('external'), [authenticate('jwt'), pushPayloadToUser()]),
       paramsFromClient('action', 'paginate'),
     ],
     find: [],

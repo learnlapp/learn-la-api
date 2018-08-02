@@ -32,7 +32,10 @@ module.exports = {
         restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
       ]),
     ],
-    create: [associateCurrentUser({ idField: 'teacherId', as: 'teacherId' })],
+    create: [
+      authenticate('jwt'),
+      associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
+    ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
