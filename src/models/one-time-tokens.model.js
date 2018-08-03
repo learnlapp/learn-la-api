@@ -12,9 +12,10 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
+      collection: 'oneTimeTokens',
     },
   );
 
   oneTimeTokens.index({ updatedAt: 1 }, { expireAfterSeconds: 6000 });
-  return mongooseClient.model('one-time-tokens', oneTimeTokens);
+  return mongooseClient.model('oneTimeTokens', oneTimeTokens);
 };

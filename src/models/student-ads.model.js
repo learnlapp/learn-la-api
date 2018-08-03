@@ -35,8 +35,9 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
+      collection: 'studentAds',
     },
   );
 
-  return mongooseClient.model('student-ads', studentAds);
+  return mongooseClient.model('studentAds', studentAds);
 };

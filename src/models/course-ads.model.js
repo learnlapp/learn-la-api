@@ -36,8 +36,9 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
+      collection: 'courseAds',
     },
   );
 
-  return mongooseClient.model('course-ads', courseAds);
+  return mongooseClient.model('courseAds', courseAds);
 };

@@ -13,6 +13,7 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
+      collection: 'versions',
     },
   );
 
