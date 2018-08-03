@@ -5,7 +5,7 @@ module.exports = function(app) {
     app.get('mongodb'),
     {
       useNewUrlParser: true,
-      autoIndex: false,
+      // autoIndex: false,
     },
   );
   mongoose.Promise = global.Promise;
