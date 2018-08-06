@@ -14,7 +14,7 @@ module.exports = function attachOrGenerateProfile() {
       if (user.roles.indexOf('teacher') === -1) {
         profile = await context.app
           .service('teachers')
-          .create({ userId: user._id, roles: { $push: 'teacher' } });
+          .create({ userId: user._id });
       } else {
         const data = await context.app.service('teachers').find({
           query: {
@@ -30,7 +30,7 @@ module.exports = function attachOrGenerateProfile() {
       return context;
     }
 
-    if (platform === 'students') {
+    if (platform === 'student') {
       if (user.roles.indexOf('student') === -1) {
         profile = await context.app
           .service('students')
