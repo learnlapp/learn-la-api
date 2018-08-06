@@ -30,6 +30,8 @@ module.exports = function(app) {
       notifications: { type: [String], default: ['analytics', 'marketing'] },
       verifications: { type: [VerificationSchema] },
 
+      bookmarks: { type: [Schema.Types.ObjectId] },
+
       extra: { type: Object },
       device: { type: Object },
       status: { type: String },
