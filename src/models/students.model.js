@@ -16,14 +16,19 @@ module.exports = function(app) {
     {
       userId: { type: Schema.Types.ObjectId, required: true, unique: true },
 
-      role: { type: String }, // personal / organization
+      role: { type: String, default: 'student' }, // personal / organization
       childName: { type: String },
       childImage: { type: String },
       educationLevel: { type: String },
 
       interests: { type: [String] },
       courses: { type: [CourseSchema] },
-      timeslots: { type: [TimeslotSchema] },
+      timeslots: {
+        type: [TimeslotSchema],
+        default: [
+          { days: [1, 2, 3, 4, 5, 6, 7], startTime: '00:00', endTime: '23:45' },
+        ],
+      },
       timeTable: { type: [Number] },
       locations: { type: [LocationSchema] },
 

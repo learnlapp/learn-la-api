@@ -11,6 +11,7 @@ const {
   keep,
   paramsFromClient,
   preventChanges,
+  serialize,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 const {
@@ -18,14 +19,18 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+const isAuthenticated = require('../../hooks/is-authenticated');
+
 const pushPayloadToUser = require('../../hooks/push-payload-to-user');
 
 const resolvers = require('./resolvers');
 
+const schema = require('./schema');
+
 module.exports = {
   before: {
     all: [pushPayloadToUser(), paramsFromClient('action', 'paginate')],
-    find: [],
+    find: [ctx => console.log('ctx.params.query', ctx.params.query._id)],
     get: [
       iff(isProvider('external'), [
         authenticate('jwt'),
@@ -54,7 +59,7 @@ module.exports = {
   },
 
   after: {
-    all: [fastJoin(resolvers)],
+    all: [fastJoin(resolvers), iff(isAuthenticated(), serialize(schema))],
     find: [],
     get: [],
     create: [],

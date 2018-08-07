@@ -15,10 +15,10 @@ module.exports = function(app) {
       timeslots: { type: [TimeslotSchema] },
       timeTable: { type: [Number] },
       location: { type: LocationSchema },
-      duration: { type: Number },
-      fee: { type: Number },
+      duration: { type: Number, default: 60 },
+      fee: { type: Number, default: 200 },
       currency: { type: String, default: 'hkd' },
-      numOfStudents: { type: Number },
+      numOfStudents: { type: Number, default: 1 },
 
       homeTuition: { type: Boolean, default: true },
       minAge: { type: Number },

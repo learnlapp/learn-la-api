@@ -11,6 +11,7 @@ const {
   keep,
   paramsFromClient,
   preventChanges,
+  serialize,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 const {
@@ -18,9 +19,13 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+// const isAuthenticated = require('../../hooks/is-authenticated');
+
 const pushPayloadToUser = require('../../hooks/push-payload-to-user');
 
 const resolvers = require('./resolvers');
+
+const schema = require('./schema');
 
 module.exports = {
   before: {
@@ -51,7 +56,7 @@ module.exports = {
   },
 
   after: {
-    all: [fastJoin(resolvers)],
+    all: [fastJoin(resolvers), serialize(schema)],
     find: [],
     get: [],
     create: [],

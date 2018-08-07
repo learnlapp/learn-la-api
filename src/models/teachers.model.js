@@ -17,7 +17,7 @@ module.exports = function(app) {
     {
       userId: { type: Schema.Types.ObjectId, required: true, unique: true },
 
-      role: { type: String }, // personal / organization
+      role: { type: String, default: 'teacher' }, // personal / organization
       organization: { type: String },
 
       educationLevel: { type: String },
