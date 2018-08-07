@@ -13,10 +13,10 @@ module.exports = function(app) {
       password: { type: String },
       facebookId: { type: String, unique: true, sparse: true },
 
-      name: { type: String },
-      avatar: { type: String },
-      birthday: { type: Date },
-      gender: { type: String, lowercase: true },
+      // name: { type: String },
+      // avatar: { type: String },
+      // birthday: { type: Date },
+      // gender: { type: String, lowercase: true },
 
       roles: { type: [String] },
       permissions: { type: [String] },

@@ -15,6 +15,10 @@ module.exports = function(app) {
   const students = new Schema(
     {
       userId: { type: Schema.Types.ObjectId, required: true, unique: true },
+      name: { type: String },
+      avatar: { type: String },
+      birthday: { type: Date },
+      gender: { type: String, lowercase: true },
 
       role: { type: String, default: 'student' }, // personal / organization
       childName: { type: String },

@@ -30,7 +30,7 @@ const schema = require('./schema');
 module.exports = {
   before: {
     all: [pushPayloadToUser(), paramsFromClient('action', 'paginate')],
-    find: [ctx => console.log('ctx.params.query', ctx.params.query._id)],
+    find: [],
     get: [
       iff(isProvider('external'), [
         authenticate('jwt'),
