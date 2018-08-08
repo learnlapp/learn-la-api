@@ -43,7 +43,7 @@ module.exports = function(app) {
 
       extra: { type: Object },
       device: { type: Object },
-      status: { type: String },
+      status: { type: String, default: 'new' },
     },
     {
       timestamps: true,
