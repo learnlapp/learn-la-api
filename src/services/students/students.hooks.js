@@ -22,7 +22,7 @@ const {
 const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
 
 // After hooks
-const saveRoleToUser = require('./hooks/after/save-role-to-user');
+const saveStudentToUser = require('./hooks/after/save-student-to-user');
 
 const resolvers = require('./resolvers');
 
@@ -41,7 +41,7 @@ module.exports = {
     all: [fastJoin(resolvers)],
     find: [],
     get: [],
-    create: [saveRoleToUser()],
+    create: [saveStudentToUser()],
     update: [],
     patch: [],
     remove: [],

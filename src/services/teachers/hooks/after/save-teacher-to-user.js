@@ -1,10 +1,11 @@
-module.exports = function saveRoleToUser() {
+module.exports = function saveTeacherToUser() {
   return async context => {
-    const { userId } = context.result;
+    const { _id, userId } = context.result;
 
     await context.app.service('users').patch(userId, {
+      teacherId: _id,
       $push: {
-        roles: 'student',
+        roles: 'teacher',
       },
     });
 

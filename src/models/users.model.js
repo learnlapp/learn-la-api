@@ -4,7 +4,9 @@
 // for more of what you can do here.
 module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
-  const users = new mongooseClient.Schema(
+  const { Schema } = mongooseClient;
+
+  const users = new Schema(
     {
       phone: { type: String, trim: true, unique: true, sparse: true },
       countryCode: { type: String, trim: true },
@@ -17,6 +19,9 @@ module.exports = function(app) {
       // avatar: { type: String },
       // birthday: { type: Date },
       // gender: { type: String, lowercase: true },
+
+      teacherId: { type: Schema.Types.ObjectId },
+      studentId: { type: Schema.Types.ObjectId },
 
       roles: { type: [String] },
       permissions: { type: [String] },
