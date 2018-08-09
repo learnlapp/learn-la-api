@@ -20,8 +20,9 @@ const {
 } = require('feathers-authentication-hooks');
 
 const isAuthenticated = require('../../hooks/is-authenticated');
-
 const pushPayloadToUser = require('../../hooks/push-payload-to-user');
+
+const getLatestStudentProfile = require('./hooks/after/get-latest-teacher-profile');
 
 const resolvers = require('./resolvers');
 
@@ -59,7 +60,10 @@ module.exports = {
   },
 
   after: {
-    all: [fastJoin(resolvers), iff(isAuthenticated(), serialize(schema))],
+    all: [
+      fastJoin(resolvers),
+      iff(isAuthenticated(), [getLatestStudentProfile(), serialize(schema)]),
+    ],
     find: [],
     get: [],
     create: [],
