@@ -30,6 +30,7 @@ module.exports = function attachOrGenerateProfile() {
         profile = data[0];
       }
       context.params.payload.teacherId = profile._id;
+      context.params.platform = 'teacher';
       context.result.profile = profile;
       return context;
     }
@@ -54,6 +55,7 @@ module.exports = function attachOrGenerateProfile() {
         profile = data[0];
       }
       context.params.payload.studentId = profile._id;
+      context.params.platform = 'student';
       context.result.profile = profile;
       return context;
     }

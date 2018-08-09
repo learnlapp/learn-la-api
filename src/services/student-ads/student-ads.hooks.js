@@ -19,9 +19,11 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
-// const isAuthenticated = require('../../hooks/is-authenticated');
+const isPlatform = require('../../hooks/is-platform');
 
-const pushPayloadToUser = require('../../hooks/push-payload-to-user');
+// const pushPayloadToUser = require('../../hooks/push-payload-to-user');
+
+const getLatestTeacherProfile = require('./hooks/after/get-latest-teacher-profile');
 
 const resolvers = require('./resolvers');
 
@@ -30,7 +32,10 @@ const schema = require('./schema');
 module.exports = {
   before: {
     all: [
-      iff(isProvider('external'), [authenticate('jwt'), pushPayloadToUser()]),
+      iff(isProvider('external'), [
+        authenticate('jwt'),
+        // pushPayloadToUser()
+      ]),
       paramsFromClient('action', 'paginate'),
     ],
     find: [],
@@ -56,7 +61,13 @@ module.exports = {
   },
 
   after: {
-    all: [fastJoin(resolvers), serialize(schema)],
+    all: [
+      fastJoin(resolvers),
+      iff(isPlatform('teacher'), [
+        getLatestTeacherProfile(),
+        serialize(schema),
+      ]),
+    ],
     find: [],
     get: [],
     create: [],
