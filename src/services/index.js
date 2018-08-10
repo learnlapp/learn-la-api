@@ -5,6 +5,7 @@ const courseAds = require('./course-ads/course-ads.service.js');
 const oneTimeTokens = require('./one-time-tokens/one-time-tokens.service.js');
 const versions = require('./versions/versions.service.js');
 const studentAds = require('./student-ads/student-ads.service.js');
+const matches = require('./matches/matches.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(users);
@@ -14,4 +15,5 @@ module.exports = function (app) {
   app.configure(oneTimeTokens);
   app.configure(versions);
   app.configure(studentAds);
+  app.configure(matches);
 };

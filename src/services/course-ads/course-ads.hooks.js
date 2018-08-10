@@ -62,6 +62,7 @@ module.exports = {
       ]),
     ],
   },
+
   after: {
     all: [
       fastJoin(resolvers),
