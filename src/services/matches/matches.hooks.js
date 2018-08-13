@@ -15,6 +15,8 @@ const {
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 
+const setExpiredAfter = require('../../hooks/set-expired-after');
+
 const associateUsers = require('./hooks/before/associate-users');
 
 const resolvers = require('./resolvers');
@@ -24,7 +26,7 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [associateUsers()],
+    create: [associateUsers(), setExpiredAfter(new Date(), 4, 'hour')],
     update: [disallow()],
     patch: [disableMultiItemChange()],
     remove: [disallow()],
