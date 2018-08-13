@@ -3,7 +3,7 @@ module.exports = function getLatestTeacherProfile() {
     const { teacherId } = context.params.user;
 
     context.params.profile = await context.app
-      .service('students')
+      .service('teachers')
       .get(teacherId);
     return context;
   };
