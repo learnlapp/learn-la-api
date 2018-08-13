@@ -43,7 +43,7 @@
     "dayjs": "^1.7.5",
     "dotenv": "^6.0.0",
     "feathers-authentication-hooks": "^0.3.0",
-    "feathers-hooks-common": "^4.14.1",
+    "feathers-hooks-common": "^4.16.0",
     "feathers-mongoose": "^6.1.4",
     "helmet": "^3.12.1",
     "mongoose": "^5.2.7",

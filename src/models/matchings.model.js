@@ -11,10 +11,10 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
-    },
+    }
   );
 
-  const matches = new Schema(
+  const matchings = new Schema(
     {
       studentId: { type: Schema.Types.ObjectId, required: true },
       teacherId: { type: Schema.Types.ObjectId, required: true },
@@ -48,8 +48,8 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
-    },
+    }
   );
 
-  return mongooseClient.model('matches', matches);
+  return mongooseClient.model('matchings', matchings);
 };
