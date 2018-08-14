@@ -18,6 +18,7 @@ const {
 const setExpiredAfter = require('../../hooks/set-expired-after');
 
 const associateUsers = require('./hooks/before/associate-users');
+const initLogMsg = require('./hooks/before/init-log-msgs');
 
 const resolvers = require('./resolvers');
 
@@ -26,7 +27,7 @@ module.exports = {
     all: [authenticate('jwt')],
     find: [],
     get: [],
-    create: [associateUsers(), setExpiredAfter(new Date(), 4, 'hour')],
+    create: [associateUsers(), initLogMsg(), setExpiredAfter(4, 'hour')],
     update: [disallow()],
     patch: [disableMultiItemChange()],
     remove: [disallow()],

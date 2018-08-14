@@ -1,11 +1,10 @@
 const dayjs = require('dayjs');
 
-module.exports = function setExpiredAfter(initialDate, num, unit) {
+module.exports = function setExpiredAfter(num, unit) {
   return context => {
-    if (!initialDate || !num || !unit) {
+    if (!num || !unit) {
       throw new Error('missing parameter(s)');
     }
-    console.log('typeof', typeof initialDate);
 
     if (typeof num !== 'number' || typeof unit !== 'string') {
       throw new Error('invalid parameter type');
@@ -16,7 +15,7 @@ module.exports = function setExpiredAfter(initialDate, num, unit) {
       throw new Error('invalid unit');
     }
 
-    context.data.expiredAt = dayjs(initialDate).add(num, unit);
+    context.data.expiredAt = dayjs().add(num, unit);
 
     return context;
   };
