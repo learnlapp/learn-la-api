@@ -15,36 +15,22 @@ const {
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 
-const setExpiredAfter = require('../../hooks/set-expired-after');
-
-const associateUsers = require('./hooks/before/associate-users');
-
-const initLogMsg = require('./hooks/after/init-log-msgs');
-
-const resolvers = require('./resolvers');
-const schema = require('./schema');
-
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
+    all: [iff(isProvider('external'), authenticate('jwt'))],
     find: [],
     get: [],
-    create: [associateUsers(), setExpiredAfter(4, 'hour')],
+    create: [],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
+    patch: [iff(isProvider('external'), disableMultiItemChange())],
     remove: [disallow()],
   },
 
   after: {
-    all: [
-      ctx => console.log('=========='),
-
-      fastJoin(resolvers),
-      serialize(schema),
-    ],
+    all: [],
     find: [],
     get: [],
-    create: [initLogMsg()],
+    create: [],
     update: [],
     patch: [],
     remove: [],
