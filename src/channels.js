@@ -60,25 +60,25 @@ module.exports = function(app) {
         }
       }
 
-      console.log('ch con', app.channel('student').length);
+      // console.log('ch con', app.channel('student').length);
 
-      console.log('all channels', app.channels.length);
+      // console.log('all channels', app.channels.length);
     }
   });
 
-  app.service('matchings').on('created', (result, context) => {
-    console.log('con', context.connection);
+  // app.service('matchings').on('created', (result, context) => {
+  //   console.log('con', context.connection);
 
-    app.channel(`matching/${result._id}`).join(context.connection);
-    console.log('all channels after create matchings', app.channels.length);
-  });
+  //   app.channel(`matching/${result._id}`).join(context.connection);
+  //   console.log('all channels after create matchings', app.channels.length);
+  // });
 
-  app.service('matchings').publish('created', (data, context) => {
-    return [
-      app.channel(`student/${data.studentId}`),
-      app.channel(`teacher/${data.teacherId}`),
-    ];
-  });
+  // app.service('matchings').publish('created', (data, context) => {
+  //   return [
+  //     app.channel(`student/${data.studentId}`),
+  //     app.channel(`teacher/${data.teacherId}`),
+  //   ];
+  // });
 
   // // eslint-disable-next-line no-unused-vars
   // app.publish((data, hook) => {
