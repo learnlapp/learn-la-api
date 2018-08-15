@@ -38,12 +38,12 @@ module.exports = {
   },
 
   after: {
-    all: [fastJoin(resolvers)],
-    find: [],
-    get: [],
-    create: [saveStudentToUser()],
+    all: [],
+    find: [fastJoin(resolvers)],
+    get: [fastJoin(resolvers)],
+    create: [saveStudentToUser(), fastJoin(resolvers)],
     update: [],
-    patch: [],
+    patch: [fastJoin(resolvers)],
     remove: [],
   },
 

@@ -36,17 +36,12 @@ module.exports = {
   },
 
   after: {
-    all: [
-      ctx => console.log('=========='),
-
-      fastJoin(resolvers),
-      serialize(schema),
-    ],
-    find: [],
-    get: [],
-    create: [initLogMsg()],
+    all: [],
+    find: [fastJoin(resolvers), serialize(schema)],
+    get: [fastJoin(resolvers), serialize(schema)],
+    create: [initLogMsg(), fastJoin(resolvers), serialize(schema)],
     update: [],
-    patch: [],
+    patch: [fastJoin(resolvers), serialize(schema)],
     remove: [],
   },
 

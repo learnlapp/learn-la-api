@@ -33,16 +33,16 @@ module.exports = {
     create: [],
     update: [disallow()],
     patch: [disableMultiItemChange(), extractAndUpdateUserInfo()],
-    remove: [disableMultiItemChange()],
+    remove: [disallow()],
   },
 
   after: {
-    all: [fastJoin(resolvers)],
-    find: [],
-    get: [],
-    create: [saveTeacherToUser()],
+    all: [],
+    find: [fastJoin(resolvers)],
+    get: [fastJoin(resolvers)],
+    create: [saveTeacherToUser(), fastJoin(resolvers)],
     update: [],
-    patch: [],
+    patch: [fastJoin(resolvers)],
     remove: [],
   },
 
