@@ -18,30 +18,33 @@ module.exports = function(app) {
 
       const { payload } = connection;
 
-      try {
-        // Student App
-        if (payload && payload.studentId) {
-          app.channel('student').join(connection);
-          app.channel(`student/${payload.studentId}`).join(connection);
+      // Student App
+      if (payload && payload.studentId) {
+        app.channel('student').join(connection);
+        app.channel(`student/${payload.studentId}`).join(connection);
 
+        try {
           const matchings = await app.service('matchings').find({
             query: { studentId: payload.studentId },
             paginate: false,
           });
-          // console.log('matchings', matchings);
 
           if (matchings.length) {
             matchings.map(matching =>
               app.channel(`matching/${matching._id}`).join(connection)
             );
           }
+        } catch (err) {
+          console.log(err);
         }
+      }
 
-        // Teacher App
-        if (payload && payload.teacherId) {
-          app.channel('teacher').join(connection);
-          app.channel(`teacher/${payload.teacherId}`).join(connection);
+      // Teacher App
+      if (payload && payload.teacherId) {
+        app.channel('teacher').join(connection);
+        app.channel(`teacher/${payload.teacherId}`).join(connection);
 
+        try {
           const matchings = await app.service('matchings').find({
             query: { teacherId: payload.teacherId },
             paginate: false,
@@ -52,34 +55,25 @@ module.exports = function(app) {
               app.channel(`matching/${matching._id}`).join(connection)
             );
           }
+        } catch (err) {
+          console.log(err);
         }
-      } catch (err) {
-        console.log('err', err);
-
-        throw err;
       }
 
-      console.log('all channels', app.channels);
+      console.log('ch con', app.channel('student').length);
 
-      // Channels can be named anything and joined on any condition
-
-      // E.g. to send real-time events only to admins use
-      // if(user.isAdmin) { app.channel('admins').join(connection); }
-
-      // If the user has joined e.g. chat rooms
-      // if(Array.isArray(user.rooms)) user.rooms.forEach(room => app.channel(`rooms/${room.id}`).join(channel));
-
-      // Easily organize users by email and userid for things like messaging
-      // app.channel(`emails/${user.email}`).join(channel);
-      // app.channel(`userIds/$(user.id}`).join(channel);
+      console.log('all channels', app.channels.length);
     }
   });
 
-  app.service('matchings').on('created', (data, context) => {});
+  app.service('matchings').on('created', (result, context) => {
+    console.log('con', context.connection);
+
+    app.channel(`matching/${result._id}`).join(context.connection);
+    console.log('all channels after create matchings', app.channels.length);
+  });
 
   app.service('matchings').publish('created', (data, context) => {
-    console.log('data', data);
-    console.log('context', context.params.connection);
     return [
       app.channel(`student/${data.studentId}`),
       app.channel(`teacher/${data.teacherId}`),
