@@ -11,22 +11,24 @@ module.exports = function initLogMsgs() {
       from = 'teacher';
     }
 
-    const matchingLogs = [
-      {
+    const [logForStudent, logForTeacher] = await Promise.all([
+      context.app.service('matching-logs').create({
         matchingId: _id,
         from,
         to: 'student',
         logId: 'invitationMsg',
-      },
-      {
+      }),
+      context.app.service('matching-logs').create({
         matchingId: _id,
         from,
         to: 'teacher',
         logId: 'invitationMsg',
-      },
-    ];
+      }),
+    ]);
 
-    const res = await context.app.service('matching-logs').create(matchingLogs);
+    context.result.latestLogForStudentCreatedAt = logForStudent.createdAt;
+    context.result.latestLogForTeacherCreatedAt = logForTeacher.createdAt;
+
     return context;
   };
 };

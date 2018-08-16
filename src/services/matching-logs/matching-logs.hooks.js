@@ -15,6 +15,8 @@ const {
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 
+const saveLatestLogTime = require('./hooks/after/save-latest-log-time');
+
 module.exports = {
   before: {
     all: [iff(isProvider('external'), authenticate('jwt'))],
@@ -30,7 +32,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [saveLatestLogTime()],
     update: [],
     patch: [],
     remove: [],

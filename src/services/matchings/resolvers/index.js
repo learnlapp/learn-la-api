@@ -20,9 +20,8 @@ const resolvers = {
     },
     unread: (...args) => async (matching, context) => {
       const { payload } = context.params;
-      console.log('resolver', payload);
 
-      if (payload.studentId) {
+      if (payload && payload.studentId) {
         const { total } = await context.app.service('matching-logs').find({
           query: {
             matchingId: matching._id,
@@ -35,7 +34,7 @@ const resolvers = {
         matching.unread = total;
       }
 
-      if (payload.teacherId) {
+      if (payload && payload.teacherId) {
         const { total } = await context.app.service('matching-logs').find({
           query: {
             matchingId: matching._id,
