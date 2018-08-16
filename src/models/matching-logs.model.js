@@ -4,6 +4,7 @@ module.exports = function(app) {
   const matchingLogs = new Schema(
     {
       matchingId: { type: Schema.Types.ObjectId, required: true },
+      from: { type: String, required: true },
       to: { type: String, required: true },
       logId: { type: String, required: true },
       read: { type: Date },

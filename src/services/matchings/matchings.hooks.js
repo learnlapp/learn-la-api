@@ -14,6 +14,10 @@ const {
   serialize,
   skipRemainingHooks,
 } = require('feathers-hooks-common');
+// const {
+//   restrictToOwner,
+//   associateCurrentUser,
+// } = require('feathers-authentication-hooks');
 
 const setExpiredAfter = require('../../hooks/set-expired-after');
 
