@@ -7,10 +7,10 @@ module.exports = function initLogMsgs() {
       { matchingId: _id, to: 'teacher', logId: 'invitationMsg' },
     ];
     console.log('start sending');
-    context.app.service('matching-logs').create(matchingLogs);
+    // context.app.service('matching-logs').create(matchingLogs);
 
-    // const res = await context.app.service('matching-logs').create(matchingLogs);
-    // console.log('res', res);
+    const res = await context.app.service('matching-logs').create(matchingLogs);
+    console.log('res', res);
     // context.abc = res;
     return context;
   };

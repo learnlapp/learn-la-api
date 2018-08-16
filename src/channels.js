@@ -12,58 +12,49 @@ module.exports = function(app) {
   app.on('login', async (authResult, { connection }) => {
     // connection can be undefined if there is no
     // real-time connection, e.g. when logging in via REST
-    if (connection) {
-      app.channel('anonymous').leave(connection);
-      app.channel('authenticated').join(connection);
-
-      const { payload } = connection;
-
-      // Student App
-      if (payload && payload.studentId) {
-        app.channel('student').join(connection);
-        app.channel(`student/${payload.studentId}`).join(connection);
-
-        try {
-          const matchings = await app.service('matchings').find({
-            query: { studentId: payload.studentId },
-            paginate: false,
-          });
-
-          if (matchings.length) {
-            matchings.map(matching =>
-              app.channel(`matching/${matching._id}`).join(connection)
-            );
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
-      // Teacher App
-      if (payload && payload.teacherId) {
-        app.channel('teacher').join(connection);
-        app.channel(`teacher/${payload.teacherId}`).join(connection);
-
-        try {
-          const matchings = await app.service('matchings').find({
-            query: { teacherId: payload.teacherId },
-            paginate: false,
-          });
-
-          if (matchings.length) {
-            matchings.map(matching =>
-              app.channel(`matching/${matching._id}`).join(connection)
-            );
-          }
-        } catch (err) {
-          console.log(err);
-        }
-      }
-
-      // console.log('ch con', app.channel('student').length);
-
-      // console.log('all channels', app.channels.length);
-    }
+    // if (connection) {
+    //   app.channel('anonymous').leave(connection);
+    //   app.channel('authenticated').join(connection);
+    //   const { payload } = connection;
+    //   // Student App
+    //   if (payload && payload.studentId) {
+    //     app.channel('student').join(connection);
+    //     app.channel(`student/${payload.studentId}`).join(connection);
+    //     try {
+    //       const matchings = await app.service('matchings').find({
+    //         query: { studentId: payload.studentId },
+    //         paginate: false,
+    //       });
+    //       if (matchings.length) {
+    //         matchings.map(matching =>
+    //           app.channel(`matching/${matching._id}`).join(connection)
+    //         );
+    //       }
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   }
+    //   // Teacher App
+    //   if (payload && payload.teacherId) {
+    //     app.channel('teacher').join(connection);
+    //     app.channel(`teacher/${payload.teacherId}`).join(connection);
+    //     try {
+    //       const matchings = await app.service('matchings').find({
+    //         query: { teacherId: payload.teacherId },
+    //         paginate: false,
+    //       });
+    //       if (matchings.length) {
+    //         matchings.map(matching =>
+    //           app.channel(`matching/${matching._id}`).join(connection)
+    //         );
+    //       }
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   }
+    //   // console.log('ch con', app.channel('student').length);
+    //   // console.log('all channels', app.channels.length);
+    // }
   });
 
   // app.service('matchings').on('created', (result, context) => {

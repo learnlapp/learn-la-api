@@ -22,7 +22,6 @@ const associateUsers = require('./hooks/before/associate-users');
 const initLogMsg = require('./hooks/after/init-log-msgs');
 
 const resolvers = require('./resolvers');
-const schema = require('./schema');
 
 module.exports = {
   before: {
@@ -37,11 +36,11 @@ module.exports = {
 
   after: {
     all: [],
-    find: [fastJoin(resolvers), serialize(schema)],
-    get: [fastJoin(resolvers), serialize(schema)],
-    create: [initLogMsg(), fastJoin(resolvers), serialize(schema)],
+    find: [fastJoin(resolvers)],
+    get: [fastJoin(resolvers)],
+    create: [initLogMsg(), fastJoin(resolvers)],
     update: [],
-    patch: [fastJoin(resolvers), serialize(schema)],
+    patch: [fastJoin(resolvers)],
     remove: [],
   },
 
