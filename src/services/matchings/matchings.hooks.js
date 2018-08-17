@@ -19,7 +19,10 @@ const {
 //   associateCurrentUser,
 // } = require('feathers-authentication-hooks');
 
+const isAction = require('../../hooks/is-action');
+
 const setExpiredAfter = require('../../hooks/set-expired-after');
+const setLogsAsRead = require('./hooks/before/set-logs-as-read');
 
 const associateUsers = require('./hooks/before/associate-users');
 
@@ -29,12 +32,15 @@ const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
+    all: [authenticate('jwt'), paramsFromClient('action')],
     find: [],
     get: [],
     create: [associateUsers(), setExpiredAfter(4, 'hour')],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
+    patch: [
+      disableMultiItemChange(),
+      iff(isAction('set-logs-as-read'), setLogsAsRead()),
+    ],
     remove: [disallow()],
   },
 

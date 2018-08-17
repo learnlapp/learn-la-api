@@ -7,6 +7,7 @@ const {
   fastJoin,
   iff,
   iffElse,
+  isNot,
   isProvider,
   keep,
   paramsFromClient,
@@ -15,16 +16,25 @@ const {
   skipRemainingHooks,
 } = require('feathers-hooks-common');
 
+const isAction = require('../../hooks/is-action');
+
 const saveLatestLogTime = require('./hooks/after/save-latest-log-time');
 
 module.exports = {
   before: {
-    all: [iff(isProvider('external'), authenticate('jwt'))],
+    all: [
+      paramsFromClient('action'),
+      iff(isProvider('external'), authenticate('jwt')),
+    ],
     find: [],
     get: [],
     create: [],
     update: [disallow()],
-    patch: [iff(isProvider('external'), disableMultiItemChange())],
+    patch: [
+      iff(isProvider('external'), [
+        iff(isNot(isAction('read')), disableMultiItemChange()),
+      ]),
+    ],
     remove: [disallow()],
   },
 
