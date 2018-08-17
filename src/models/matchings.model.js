@@ -33,14 +33,16 @@ module.exports = function(app) {
       requireQualificationProof: { type: Boolean },
       fee: { type: Number, required: true },
 
-      exchangePhone: { type: String },
+      isStudentPhoneGiven: { type: Boolean },
+      isTeacherPhoneGiven: { type: Boolean },
 
       latestLogForStudentCreatedAt: { type: Date },
       latestLogForTeacherCreatedAt: { type: Date },
 
       expiredAt: { type: Date },
       archivedAt: { type: Date },
-      removedAt: { type: Date },
+      studentRemovedAt: { type: Date },
+      teacherRemovedAt: { type: Date },
     },
     {
       timestamps: true,

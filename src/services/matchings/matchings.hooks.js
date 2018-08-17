@@ -22,7 +22,7 @@ const {
 const isAction = require('../../hooks/is-action');
 
 const setExpiredAfter = require('../../hooks/set-expired-after');
-const setLogsAsRead = require('./hooks/before/set-logs-as-read');
+const isOwner = require('./hooks/before/is-owner');
 
 const associateUsers = require('./hooks/before/associate-users');
 
@@ -32,15 +32,15 @@ const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [authenticate('jwt'), paramsFromClient('action')],
+    all: [
+      iff(isProvider('external'), authenticate('jwt')),
+      paramsFromClient('action'),
+    ],
     find: [],
     get: [],
     create: [associateUsers(), setExpiredAfter(4, 'hour')],
     update: [disallow()],
-    patch: [
-      disableMultiItemChange(),
-      iff(isAction('set-logs-as-read'), setLogsAsRead()),
-    ],
+    patch: [disableMultiItemChange(), isOwner()],
     remove: [disallow()],
   },
 

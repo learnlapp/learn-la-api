@@ -23,8 +23,8 @@ const saveLatestLogTime = require('./hooks/after/save-latest-log-time');
 module.exports = {
   before: {
     all: [
-      paramsFromClient('action'),
       iff(isProvider('external'), authenticate('jwt')),
+      paramsFromClient('action'),
     ],
     find: [],
     get: [],
