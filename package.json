@@ -16,8 +16,8 @@
     "test": "test/"
   },
   "engines": {
-    "node": "10.8.0",
-    "yarn": "1.9.4"
+    "node": "^10.8.0",
+    "yarn": "^1.9.4"
   },
   "scripts": {
     "test": "yarn run eslint && yarn run mocha",

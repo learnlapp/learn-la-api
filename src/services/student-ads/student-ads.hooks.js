@@ -20,6 +20,7 @@ const {
 } = require('feathers-authentication-hooks');
 
 const isPlatform = require('../../hooks/is-platform');
+const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 // const pushPayloadToUser = require('../../hooks/push-payload-to-user');
 
@@ -62,7 +63,7 @@ module.exports = {
 
   after: {
     all: [
-      fastJoin(resolvers),
+      fastJoin(resolvers, setFastJoinQuery()),
       iff(isPlatform('teacher'), [
         getLatestTeacherProfile(),
         serialize(schema),

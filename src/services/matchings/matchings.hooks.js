@@ -19,7 +19,8 @@ const {
 //   associateCurrentUser,
 // } = require('feathers-authentication-hooks');
 
-const isAction = require('../../hooks/is-action');
+// const isAction = require('../../hooks/is-action');
+const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 const setExpiredAfter = require('../../hooks/set-expired-after');
 const isOwner = require('./hooks/before/is-owner');
@@ -46,11 +47,13 @@ module.exports = {
 
   after: {
     all: [],
-    find: [fastJoin(resolvers)],
-    get: [fastJoin(resolvers)],
-    create: [initLogMsg(), fastJoin(resolvers)],
+    find: [fastJoin(resolvers, setFastJoinQuery())],
+    get: [fastJoin(resolvers, setFastJoinQuery())],
+    create: [initLogMsg(), fastJoin(resolvers), setFastJoinQuery()],
     update: [],
-    patch: [iff(isProvider('external'), fastJoin(resolvers))],
+    patch: [
+      iff(isProvider('external'), fastJoin(resolvers, setFastJoinQuery())),
+    ],
     remove: [],
   },
 

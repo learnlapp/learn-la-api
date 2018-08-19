@@ -7,6 +7,7 @@ const resolvers = {
           query: {
             // $select: { password: 0 },
           },
+          fastJoinQuery: { user: false },
         });
     },
   },

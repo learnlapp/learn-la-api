@@ -18,6 +18,8 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
+
 // Before hooks
 const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
 // After hooks
@@ -38,11 +40,11 @@ module.exports = {
 
   after: {
     all: [],
-    find: [fastJoin(resolvers)],
-    get: [fastJoin(resolvers)],
-    create: [saveTeacherToUser(), fastJoin(resolvers)],
+    find: [fastJoin(resolvers, setFastJoinQuery())],
+    get: [fastJoin(resolvers, setFastJoinQuery())],
+    create: [saveTeacherToUser(), fastJoin(resolvers, setFastJoinQuery())],
     update: [],
-    patch: [fastJoin(resolvers)],
+    patch: [fastJoin(resolvers, setFastJoinQuery())],
     remove: [],
   },
 

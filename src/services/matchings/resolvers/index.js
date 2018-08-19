@@ -7,6 +7,7 @@ const resolvers = {
           query: {
             // $select: { password: 0 },
           },
+          fastJoinQuery: { user: false },
         });
     },
     student: (...args) => async (matching, context) => {
@@ -16,6 +17,7 @@ const resolvers = {
           query: {
             // $select: { password: 0 },
           },
+          fastJoinQuery: { user: false },
         });
     },
     unread: (...args) => async (matching, context) => {
@@ -31,7 +33,7 @@ const resolvers = {
           },
         });
 
-        matching.unread = total;
+        return (matching.unread = total);
       }
 
       if (payload && payload.teacherId) {
@@ -44,7 +46,7 @@ const resolvers = {
           },
         });
 
-        matching.unread = total;
+        return (matching.unread = total);
       }
     },
   },
