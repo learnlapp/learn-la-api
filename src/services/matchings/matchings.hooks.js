@@ -24,6 +24,7 @@ const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 const setExpiredAfter = require('../../hooks/set-expired-after');
 const isOwner = require('./hooks/before/is-owner');
+const exchangePhoneCheck = require('./hooks/before/exchange-phone-check');
 
 const associateUsers = require('./hooks/before/associate-users');
 
@@ -41,7 +42,10 @@ module.exports = {
     get: [],
     create: [associateUsers(), setExpiredAfter(4, 'hour')],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
+    patch: [
+      disableMultiItemChange(),
+      iff(isProvider('external'), [isOwner(), exchangePhoneCheck()]),
+    ],
     remove: [disallow()],
   },
 
