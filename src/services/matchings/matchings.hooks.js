@@ -41,7 +41,7 @@ module.exports = {
     get: [],
     create: [associateUsers(), setExpiredAfter(4, 'hour')],
     update: [disallow()],
-    patch: [disableMultiItemChange(), isOwner()],
+    patch: [disableMultiItemChange()],
     remove: [disallow()],
   },
 
