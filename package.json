@@ -16,8 +16,8 @@
     "test": "test/"
   },
   "engines": {
-    "node": "10.7.0",
-    "yarn": "1.7.0"
+    "node": "^10.8.0",
+    "yarn": "^1.9.4"
   },
   "scripts": {
     "test": "yarn run eslint && yarn run mocha",
@@ -40,12 +40,13 @@
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.2",
     "cors": "^2.8.4",
+    "dayjs": "^1.7.5",
     "dotenv": "^6.0.0",
     "feathers-authentication-hooks": "^0.3.0",
-    "feathers-hooks-common": "^4.14.1",
-    "feathers-mongoose": "^6.1.2",
+    "feathers-hooks-common": "^4.16.0",
+    "feathers-mongoose": "^6.1.4",
     "helmet": "^3.12.1",
-    "mongoose": "^5.2.6",
+    "mongoose": "^5.2.7",
     "passport-facebook-token": "^3.3.0",
     "randomstring": "^1.1.5",
     "serve-favicon": "^2.5.0",

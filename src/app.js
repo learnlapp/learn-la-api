@@ -14,11 +14,9 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
-const twillioApi = require('./twillio-api');
-
-const authentication = require('./authentication');
-
 const mongoose = require('./mongoose');
+const authentication = require('./authentication');
+const twillioApi = require('./twillio-api');
 
 const app = express(feathers());
 

@@ -20,8 +20,8 @@ const {
 } = require('feathers-authentication-hooks');
 
 const isAuthenticated = require('../../hooks/is-authenticated');
-// const pushPayloadToUser = require('../../hooks/push-payload-to-user');
 const isPlatform = require('../../hooks/is-platform');
+const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 const getLatestStudentProfile = require('./hooks/after/get-latest-student-profile');
 
@@ -32,8 +32,7 @@ const schema = require('./schema');
 module.exports = {
   before: {
     all: [
-      // pushPayloadToUser(),
-      paramsFromClient('action', 'paginate'),
+      // paramsFromClient('action', 'paginate'),
     ],
     find: [],
     get: [
@@ -62,9 +61,10 @@ module.exports = {
       ]),
     ],
   },
+
   after: {
     all: [
-      fastJoin(resolvers),
+      fastJoin(resolvers, setFastJoinQuery()),
       iff(isAuthenticated(), [
         iff(isPlatform('student'), [
           getLatestStudentProfile(),
