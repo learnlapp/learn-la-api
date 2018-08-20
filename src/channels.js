@@ -12,136 +12,93 @@ module.exports = function(app) {
   app.on('login', async (authResult, { connection }) => {
     // connection can be undefined if there is no
     // real-time connection, e.g. when logging in via REST
-    // if (connection) {
-    //   app.channel('anonymous').leave(connection);
-    //   app.channel('authenticated').join(connection);
-    //   const { payload } = connection;
-    //   // Student App
-    //   if (payload && payload.studentId) {
-    //     app.channel('student').join(connection);
-    //     app.channel(`student/${payload.studentId}`).join(connection);
-    //     try {
-    //       const matchings = await app.service('matchings').find({
-    //         query: { studentId: payload.studentId },
-    //         paginate: false,
-    //       });
-    //       if (matchings.length) {
-    //         matchings.map(matching =>
-    //           app.channel(`matching/${matching._id}`).join(connection)
-    //         );
-    //       }
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   }
-    //   // Teacher App
-    //   if (payload && payload.teacherId) {
-    //     app.channel('teacher').join(connection);
-    //     app.channel(`teacher/${payload.teacherId}`).join(connection);
-    //     try {
-    //       const matchings = await app.service('matchings').find({
-    //         query: { teacherId: payload.teacherId },
-    //         paginate: false,
-    //       });
-    //       if (matchings.length) {
-    //         matchings.map(matching =>
-    //           app.channel(`matching/${matching._id}`).join(connection)
-    //         );
-    //       }
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   }
-    //   // console.log('ch con', app.channel('student').length);
-    //   // console.log('all channels', app.channels.length);
-    // }
+    if (connection) {
+      app.channel('anonymous').leave(connection);
+      app.channel('authenticated').join(connection);
+
+      const { payload } = connection;
+      // Student App
+      if (payload && payload.studentId) {
+        app.channel('student').join(connection);
+        app.channel(`student/${payload.studentId}`).join(connection);
+        try {
+          const matchings = await app.service('matchings').find({
+            query: {
+              studentId: payload.studentId,
+              archivedAt: { $exists: false },
+              removedAt: { $exists: false },
+            },
+            fastJoinQuery: { student: false, teacher: false, unread: false },
+            paginate: false,
+          });
+
+          if (matchings.length) {
+            matchings.map(matching => {
+              app.channel(`matching/${matching._id}/student`).join(connection);
+            });
+          }
+        } catch (err) {
+          console.log('channel: fetch matchings error: ', err);
+        }
+      }
+
+      // Teacher App
+      if (payload && payload.teacherId) {
+        app.channel('teacher').join(connection);
+        app.channel(`teacher/${payload.teacherId}`).join(connection);
+
+        try {
+          const matchings = await app.service('matchings').find({
+            query: {
+              teacherId: payload.teacherId,
+              archivedAt: { $exists: false },
+              removedAt: { $exists: false },
+            },
+            fastJoinQuery: { student: false, teacher: false, unread: false },
+            paginate: false,
+          });
+
+          if (matchings.length) {
+            matchings.map(matching => {
+              app.channel(`matching/${matching._id}/teacher`).join(connection);
+            });
+          }
+        } catch (err) {
+          console.log('channel: fetch matchings error: ', err);
+        }
+      }
+    }
   });
 
-  // app.service('matchings').on('created', (result, context) => {
-  //   console.log('con', context.connection);
+  app.service('matchings').on('created', (data, context) => {
+    const studentConnections = app.channel(`student/${data.studentId}`)
+      .connections;
+    const teacherConnections = app.channel(`student/${data.teacherId}`)
+      .connections;
 
-  //   app.channel(`matching/${result._id}`).join(context.connection);
-  //   console.log('all channels after create matchings', app.channels.length);
-  // });
+    console.log('student connection', studentConnections);
+    console.log('teacher connection', teacherConnections);
 
-  // app.service('matchings').publish('created', (data, context) => {
-  //   return [
-  //     app.channel(`student/${data.studentId}`),
-  //     app.channel(`teacher/${data.teacherId}`),
-  //   ];
-  // });
+    studentConnections.map(connection =>
+      app.channel(`matching/${data._id}/student`).join(connection)
+    );
 
-  // // eslint-disable-next-line no-unused-vars
-  // app.publish((data, hook) => {
-  //   // Here you can add event publishers to channels set up in `channels.js`
-  //   // To publish only for a specific event use `app.publish(eventname, () => {})`
+    teacherConnections.map(connection =>
+      app.channel(`matching/${data._id}/student`).join(connection)
+    );
+  });
 
-  //   console.log(
-  //     'Publishing all events to all authenticated users. See `channels.js` and https://docs.feathersjs.com/api/channels.html for more information.'
-  //   ); // eslint-disable-line
+  // ======
+  // Publish Events
+  // ======
+  app.service('matchings').publish('patched', (data, context) => {
+    return [
+      app.channel(`student/${data.studentId}`),
+      app.channel(`teacher/${data.teacherId}`),
+    ];
+  });
 
-  //   // e.g. to publish all service events to all authenticated users use
-  //   return app.channel('authenticated');
-  // });
-
-  // Here you can also add service specific event publishers
-  // e.g. the publish the `users` service `created` event to the `admins` channel
-  // app.service('users').publish('created', () => app.channel('admins'));
-
-  //
-  //
-
-  //
-
-  // With the userid and email organization from above you can easily select involved users
-  // app.service('messages').publish(() => {
-  //   return [
-  //     app.channel(`userIds/${data.createdBy}`),
-  //     app.channel(`emails/${data.recipientEmail}`)
-  //   ];
-  // });
+  app.service('matching-logs').publish('created', (data, context) => {
+    return [app.channel(`matching/${data.matchingId}/${data.to}`)];
+  });
 };
-
-// // Join a channel given a user and connection
-// const joinChannels = (user, connection) => {
-//   app.channel('authenticated').join(connection);
-//   // Assuming that the chat room/user assignment is stored
-//   // on an array of the user
-//   user.rooms.forEach(room =>
-//     app.channel(`rooms/${roomId}`).join(connection)
-//   );
-// }
-
-// // Get a user to leave all channels
-// const leaveChannels = user => {
-//   app.channel(app.channels).leave(connection =>
-//     connection.user._id === user._id
-//   );
-// };
-
-// // Leave and re-join all channels with new user information
-// const updateChannels = user => {
-//   // Find all connections for this user
-//   const { connections } = app.channel(app.channels).filter(connection =>
-//     connection.user._id === user._id
-//   );
-
-//   // Leave all channels
-//   leaveChannels(user);
-
-//   // Re-join all channels with the updated user information
-//   connections.forEach(connection => joinChannels(user, connection));
-// }
-
-// app.on('login', (payload, { connection }) => {
-//   if(connection) {
-//     // Join all channels on login
-//     joinChannels(connection.user, connection);
-//   }
-// });
-
-// // On `updated` and `patched`, leave and re-join with new room assignments
-// app.service('users').on('updated', updateChannels);
-// app.service('users').on('patched', updateChannels);
-// // On `removed`, remove the connection from all channels
-// app.service('users').on('removed', leaveChannels);
