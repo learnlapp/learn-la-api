@@ -3,15 +3,23 @@ module.exports = function saveLatestLogTime() {
     const { matchingId, to, createdAt } = context.result;
 
     if (to === 'student') {
-      await context.app.service('matchings').patch(matchingId, {
-        latestLogForStudentCreatedAt: createdAt,
-      });
+      await context.app.service('matchings').patch(
+        matchingId,
+        {
+          latestLogForStudentCreatedAt: createdAt,
+        },
+        context.params
+      );
     }
 
     if (to === 'teacher') {
-      await context.app.service('matchings').patch(matchingId, {
-        latestLogForTeacherCreatedAt: createdAt,
-      });
+      await context.app.service('matchings').patch(
+        matchingId,
+        {
+          latestLogForTeacherCreatedAt: createdAt,
+        },
+        context.params
+      );
     }
 
     return context;

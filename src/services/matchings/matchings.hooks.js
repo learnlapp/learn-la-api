@@ -55,9 +55,7 @@ module.exports = {
     get: [fastJoin(resolvers, setFastJoinQuery())],
     create: [initLogMsg(), fastJoin(resolvers), setFastJoinQuery()],
     update: [],
-    patch: [
-      iff(isProvider('external'), fastJoin(resolvers, setFastJoinQuery())),
-    ],
+    patch: [fastJoin(resolvers, setFastJoinQuery())],
     remove: [],
   },
 
