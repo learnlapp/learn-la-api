@@ -28,7 +28,12 @@ module.exports = function(app) {
               archivedAt: { $exists: false },
               removedAt: { $exists: false },
             },
-            fastJoinQuery: { student: false, teacher: false, unread: false },
+            fastJoinQuery: {
+              student: false,
+              teacher: false,
+              unreadStudentLogsCount: false,
+              unreadTeacherLogsCount: false,
+            },
             paginate: false,
           });
 
@@ -54,7 +59,12 @@ module.exports = function(app) {
               archivedAt: { $exists: false },
               removedAt: { $exists: false },
             },
-            fastJoinQuery: { student: false, teacher: false, unread: false },
+            fastJoinQuery: {
+              student: false,
+              teacher: false,
+              unreadStudentLogsCount: false,
+              unreadTeacherLogsCount: false,
+            },
             paginate: false,
           });
 
@@ -92,6 +102,14 @@ module.exports = function(app) {
   // Publish Events
   // ======
   app.service('matchings').publish('patched', (data, context) => {
+    // if (data.to === 'student') {
+    //   return app.channel(`student/${data.studentId}`);
+    // }
+
+    // if (data.to === 'teacher') {
+    //   return app.channel(`teacher/${data.teacherId}`);
+    // }
+
     return [
       app.channel(`student/${data.studentId}`),
       app.channel(`teacher/${data.teacherId}`),

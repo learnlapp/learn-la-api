@@ -32,34 +32,58 @@ const resolvers = {
           fastJoinQuery,
         }));
     },
-    unread: (...args) => async (matching, context) => {
-      const { payload } = context.params;
+    // unread: (...args) => async (matching, context) => {
+    //   const { payload } = context.params;
 
-      if (payload && payload.studentId) {
-        const { total } = await context.app.service('matching-logs').find({
-          query: {
-            matchingId: matching._id,
-            to: 'student',
-            read: { $exists: false },
-            $limit: 0,
-          },
-        });
+    //   if (payload && payload.studentId) {
+    //     const { total } = await context.app.service('matching-logs').find({
+    //       query: {
+    //         matchingId: matching._id,
+    //         to: 'student',
+    //         read: { $exists: false },
+    //         $limit: 0,
+    //       },
+    //     });
 
-        return (matching.unread = total);
-      }
+    //     return (matching.unread = total);
+    //   }
 
-      if (payload && payload.teacherId) {
-        const { total } = await context.app.service('matching-logs').find({
-          query: {
-            matchingId: matching._id,
-            to: 'teacher',
-            read: { $exists: false },
-            $limit: 0,
-          },
-        });
+    //   if (payload && payload.teacherId) {
+    //     const { total } = await context.app.service('matching-logs').find({
+    //       query: {
+    //         matchingId: matching._id,
+    //         to: 'teacher',
+    //         read: { $exists: false },
+    //         $limit: 0,
+    //       },
+    //     });
 
-        return (matching.unread = total);
-      }
+    //     return (matching.unread = total);
+    //   }
+    // },
+    unreadStudentLogsCount: (...args) => async (matching, context) => {
+      const { total } = await context.app.service('matching-logs').find({
+        query: {
+          matchingId: matching._id,
+          to: 'student',
+          read: { $exists: false },
+          $limit: 0,
+        },
+      });
+
+      return (matching.unreadStudentLogsCount = total);
+    },
+    unreadTeacherLogsCount: (...args) => async (matching, context) => {
+      const { total } = await context.app.service('matching-logs').find({
+        query: {
+          matchingId: matching._id,
+          to: 'teacher',
+          read: { $exists: false },
+          $limit: 0,
+        },
+      });
+
+      return (matching.unreadTeacherLogsCount = total);
     },
   },
 };

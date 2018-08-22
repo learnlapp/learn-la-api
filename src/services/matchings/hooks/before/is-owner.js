@@ -5,7 +5,12 @@ module.exports = function isOwner() {
     const { studentId, teacherId } = context.params.payload;
 
     const matching = await context.app.service('matchings').get(context.id, {
-      fastJoinQuery: { student: false, teacher: false, unread: false },
+      fastJoinQuery: {
+        student: false,
+        teacher: false,
+        unreadStudentLogsCount: false,
+        unreadTeacherLogsCount: false,
+      },
     });
 
     if (!matching) {
