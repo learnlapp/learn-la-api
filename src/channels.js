@@ -83,7 +83,7 @@ module.exports = function(app) {
   app.service('matchings').on('created', (data, context) => {
     const studentConnections = app.channel(`student/${data.studentId}`)
       .connections;
-    const teacherConnections = app.channel(`student/${data.teacherId}`)
+    const teacherConnections = app.channel(`teacher/${data.teacherId}`)
       .connections;
 
     // console.log('student connection', studentConnections);
@@ -94,7 +94,7 @@ module.exports = function(app) {
     );
 
     teacherConnections.map(connection =>
-      app.channel(`matching/${data._id}/student`).join(connection)
+      app.channel(`matching/${data._id}/teacher`).join(connection)
     );
   });
 
