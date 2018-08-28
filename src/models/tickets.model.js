@@ -19,9 +19,10 @@ module.exports = function(app) {
   const tickets = new Schema(
     {
       platform: { type: String, required: true },
-      type: { type: String, required: true },
       studentId: { type: Schema.Types.ObjectId },
       teacherId: { type: Schema.Types.ObjectId },
+
+      type: { type: String, required: true },
       matchingId: { type: Schema.Types.ObjectId },
       reason: { type: String },
       content: { type: String, required: true },

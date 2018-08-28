@@ -1,32 +1,23 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
   disallow,
-  disableMultiItemChange,
   iff,
-  isNot,
   isProvider,
-  paramsFromClient,
+  fastJoin,
 } = require('feathers-hooks-common');
 
-const isAction = require('../../hooks/is-action');
+const validate = require('./hooks/before/validate');
 
-const saveLatestLogTime = require('./hooks/after/save-latest-log-time');
+const updateProfile = require('./hooks/after/update-profile');
 
 module.exports = {
   before: {
-    all: [
-      iff(isProvider('external'), authenticate('jwt')),
-      paramsFromClient('action'),
-    ],
+    all: [iff(isProvider('external'), authenticate('jwt'))],
     find: [],
     get: [],
-    create: [],
+    create: [iff(isProvider('external'), disallow()), validate()],
     update: [disallow()],
-    patch: [
-      iff(isProvider('external'), [
-        iff(isNot(isAction('read')), disableMultiItemChange()),
-      ]),
-    ],
+    patch: [disallow()],
     remove: [disallow()],
   },
 
@@ -34,7 +25,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [saveLatestLogTime()],
+    create: [updateProfile()],
     update: [],
     patch: [],
     remove: [],

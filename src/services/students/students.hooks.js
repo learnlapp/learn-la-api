@@ -22,9 +22,11 @@ const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 // Before hooks
 const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
+const initStudentQuota = require('./hooks/before/init-student-quota');
 
 // After hooks
 const saveStudentToUser = require('./hooks/after/save-student-to-user');
+const giveStudentWelcomeCoins = require('./hooks/after/give-student-welcome-coins');
 
 const resolvers = require('./resolvers');
 
@@ -33,7 +35,7 @@ module.exports = {
     all: [iff(isProvider('external'), [authenticate('jwt')])],
     find: [],
     get: [],
-    create: [],
+    create: [initStudentQuota()],
     update: [disallow()],
     patch: [disableMultiItemChange(), extractAndUpdateUserInfo()],
     remove: [disableMultiItemChange()],
@@ -43,7 +45,11 @@ module.exports = {
     all: [],
     find: [fastJoin(resolvers, setFastJoinQuery())],
     get: [fastJoin(resolvers, setFastJoinQuery())],
-    create: [saveStudentToUser(), fastJoin(resolvers, setFastJoinQuery())],
+    create: [
+      giveStudentWelcomeCoins(),
+      saveStudentToUser(),
+      fastJoin(resolvers, setFastJoinQuery()),
+    ],
     update: [],
     patch: [fastJoin(resolvers, setFastJoinQuery())],
     remove: [],

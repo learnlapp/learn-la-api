@@ -50,7 +50,7 @@ module.exports = {
       iffElse(
         isFacebookSignUp(),
         [processDataFromFacebook()],
-        [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()],
+        [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
       ),
     ],
     update: [disallow()],
@@ -70,9 +70,9 @@ module.exports = {
             iffElse(
               isAction('update-phone'),
               [constructPhone(), verifyOneTimeToken()],
-              [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')],
+              [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
             ),
-          ],
+          ]
         ),
       ]),
       hashPassword(),

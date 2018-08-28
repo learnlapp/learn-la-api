@@ -22,8 +22,11 @@ const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 // Before hooks
 const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
+const initTeacherQuota = require('./hooks/before/init-teacher-quota');
+
 // After hooks
 const saveTeacherToUser = require('./hooks/after/save-teacher-to-user');
+const giveTeacherWelcomeCoins = require('./hooks/after/give-teacher-welcome-coins');
 
 const resolvers = require('./resolvers');
 
@@ -32,9 +35,24 @@ module.exports = {
     all: [iff(isProvider('external'), [authenticate('jwt')])],
     find: [],
     get: [],
-    create: [],
+    create: [initTeacherQuota()],
     update: [disallow()],
-    patch: [disableMultiItemChange(), extractAndUpdateUserInfo()],
+    patch: [
+      disableMultiItemChange(),
+      extractAndUpdateUserInfo(),
+      iff(
+        isProvider('external'),
+        preventChanges(
+          false,
+          'coin',
+          'credit',
+          'freeAdsQuota',
+          'freeAdsQuotaLeft',
+          'freeApplyQuota',
+          'freeApplyQuotaLeft'
+        )
+      ),
+    ],
     remove: [disallow()],
   },
 
@@ -42,7 +60,11 @@ module.exports = {
     all: [],
     find: [fastJoin(resolvers, setFastJoinQuery())],
     get: [fastJoin(resolvers, setFastJoinQuery())],
-    create: [saveTeacherToUser(), fastJoin(resolvers, setFastJoinQuery())],
+    create: [
+      giveTeacherWelcomeCoins(),
+      saveTeacherToUser(),
+      fastJoin(resolvers, setFastJoinQuery()),
+    ],
     update: [],
     patch: [fastJoin(resolvers, setFastJoinQuery())],
     remove: [],

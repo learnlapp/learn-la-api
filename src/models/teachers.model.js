@@ -50,6 +50,13 @@ module.exports = function(app) {
 
       bookmarks: { type: [Schema.Types.ObjectId] },
 
+      coin: { type: Number },
+      credit: { type: Number },
+      freeAdsQuota: { type: Number },
+      freeAdsQuotaLeft: { type: Number },
+      freeApplyQuota: { type: Number },
+      freeApplyQuotaLeft: { type: Number },
+
       extra: { type: Object },
       device: { type: Object },
       status: { type: String, default: 'new' },
@@ -57,7 +64,7 @@ module.exports = function(app) {
     {
       timestamps: true,
       collection: 'teachers',
-    },
+    }
   );
 
   return mongooseClient.model('teachers', teachers);
