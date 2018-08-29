@@ -30,11 +30,11 @@ module.exports = function(app) {
           Strategy: FacebookTokenStrategy,
           Verifier: FacebookTokenVerifier,
         },
-        config.facebookTokenTeacher,
-      ),
-    ),
+        config.facebookTokenTeacher
+      )
+    )
   );
-  app.configure(˚®˚
+  app.configure(
     oauth2(
       Object.assign(
         {
@@ -42,9 +42,9 @@ module.exports = function(app) {
           Strategy: FacebookTokenStrategy,
           Verifier: FacebookTokenVerifier,
         },
-        config.facebookTokenStudent,
-      ),
-    ),
+        config.facebookTokenStudent
+      )
+    )
   );
 
   // The `authentication` service is used to create a JWT.

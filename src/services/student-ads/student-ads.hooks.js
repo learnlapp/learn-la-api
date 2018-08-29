@@ -21,6 +21,7 @@ const {
 
 const isPlatform = require('../../hooks/is-platform');
 const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
+const isAuthenticated = require('../../hooks/is-authenticated');
 
 // const pushPayloadToUser = require('../../hooks/push-payload-to-user');
 const isSettingOnline = require('./hooks/before/is-setting-online');
@@ -67,9 +68,11 @@ module.exports = {
   after: {
     all: [
       fastJoin(resolvers, setFastJoinQuery()),
-      iff(isPlatform('teacher'), [
-        getLatestTeacherProfile(),
-        serialize(schema),
+      iff(isAuthenticated(), [
+        iff(isPlatform('teacher'), [
+          getLatestTeacherProfile(),
+          serialize(schema),
+        ]),
       ]),
     ],
     find: [],
