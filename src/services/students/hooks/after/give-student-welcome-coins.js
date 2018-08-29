@@ -15,7 +15,7 @@ module.exports = function giveStudentWelcomeCoins() {
     await context.app.service('coin-transactions').create({
       type: 'in',
       ownerType: 'student',
-      teacherId: _id,
+      studentId: _id,
       description: `Free ${data[0].welcomeCoin} coins for new sign up.`,
       ref: 'system',
       amount: data[0].welcomeCoin,
