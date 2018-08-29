@@ -23,6 +23,8 @@ const isPlatform = require('../../hooks/is-platform');
 const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
 // const pushPayloadToUser = require('../../hooks/push-payload-to-user');
+const isSettingOnline = require('./hooks/before/is-setting-online');
+const chargeCoins = require('./hooks/before/charge-coins');
 
 const getLatestTeacherProfile = require('./hooks/after/get-latest-teacher-profile');
 
@@ -51,6 +53,7 @@ module.exports = {
       disableMultiItemChange(),
       iff(isProvider('external'), [
         restrictToOwner({ idField: 'studentId', ownerField: 'studentId' }),
+        iff(isSettingOnline(), [chargeCoins()]),
       ]),
     ],
     remove: [

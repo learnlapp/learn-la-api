@@ -47,7 +47,6 @@ module.exports = {
     create: [
       authenticate('jwt'),
       associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
-      chargeCoins(),
       // iff(isSettingOnline(), [chargeCoins()]),
     ],
     update: [disallow()],
@@ -56,6 +55,7 @@ module.exports = {
       iff(isProvider('external'), [
         authenticate('jwt'),
         restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+        iff(isSettingOnline(), [chargeCoins()]),
       ]),
     ],
     remove: [

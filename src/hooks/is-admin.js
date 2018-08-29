@@ -8,7 +8,7 @@ module.exports = function isAdmin() {
     }
 
     if (user.roles.indexOf('admin') === -1) {
-      throw new MethodNotAllowed();
+      throw new MethodNotAllowed('Admin only');
     }
 
     return context;

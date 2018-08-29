@@ -52,8 +52,7 @@ module.exports = function(app) {
 
       coin: { type: Number },
       credit: { type: Number },
-      freeAdsQuota: { type: Number },
-      freeAdsQuotaLeft: { type: Number },
+      // freeAdsQuota: { type: Number },
       freeApplyQuota: { type: Number },
       freeApplyQuotaLeft: { type: Number },
 
