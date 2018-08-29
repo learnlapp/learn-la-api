@@ -86,9 +86,6 @@ module.exports = function(app) {
     const teacherConnections = app.channel(`teacher/${data.teacherId}`)
       .connections;
 
-    // console.log('student connection', studentConnections);
-    // console.log('teacher connection', teacherConnections);
-
     studentConnections.map(connection =>
       app.channel(`matching/${data._id}/student`).join(connection)
     );

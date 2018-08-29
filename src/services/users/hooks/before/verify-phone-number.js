@@ -9,8 +9,8 @@ module.exports = function verifyPhoneNumber() {
     const verify = promisify(authy(apiKey).phones().verification_check);
 
     try {
-      const response = await verify(phone, countryCode, verifyCode);
-      console.log('Verify phone number: ', response);
+      await verify(phone, countryCode, verifyCode);
+
       return context;
     } catch (err) {
       throw new BadRequest(err.message, err);

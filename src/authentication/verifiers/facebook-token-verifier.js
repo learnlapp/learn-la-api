@@ -16,15 +16,14 @@ class CustomVerifier extends Verifier {
       // debug('failed: the service.id was not set');
       return done(
         new Error(
-          'the `id` property must be set on the entity service for authentication',
-        ),
+          'the `id` property must be set on the entity service for authentication'
+        )
       );
     }
 
     // Check request object for an existing entity
     if (req && req[options.entity]) {
       existing = req[options.entity];
-      console.log('existing', existing);
     }
 
     // Check the request that came from a hook for an existing entity

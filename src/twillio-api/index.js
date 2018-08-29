@@ -13,7 +13,7 @@ module.exports = function(app) {
       const twillioResponse = await verify(
         phoneNumber,
         countryCode,
-        verifyCode,
+        verifyCode
       );
       // NOTE: response = {
       //   message: 'Verification code is correct.',
@@ -32,13 +32,11 @@ module.exports = function(app) {
         {
           query: { phone },
           mongoose: { upsert: true },
-        },
+        }
       );
 
       res.send({ ...twillioResponse, phone, token });
     } catch (err) {
-      console.log('err');
-      // throw new BadRequest(err.message, err);
       res.send(new BadRequest(err.message, err));
     }
   });

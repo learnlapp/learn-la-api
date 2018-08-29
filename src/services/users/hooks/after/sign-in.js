@@ -1,4 +1,4 @@
-module.exports = function() {
+module.exports = function signIn() {
   return async context => {
     const { action } = context.params;
 
@@ -9,12 +9,7 @@ module.exports = function() {
         phone: '85296344902',
         password: '1234',
       });
-      // const response = await context.app.authenticate({
-      //   strategy: 'local',
-      //   phone: '85296344902',
-      //   password: '1234',
-      // });
-      console.log('signed', response);
+
       context.result = response;
       return context;
     }

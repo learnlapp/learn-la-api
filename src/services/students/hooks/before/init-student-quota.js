@@ -4,7 +4,7 @@ module.exports = function initStudentQuota() {
   return async context => {
     const { data } = await context.app
       .service('app-settings')
-      .find({ platform: 'student' });
+      .find({ query: { platform: 'student' } });
 
     if (data.length <= 0) {
       throw new NotFound('No app settings found.');

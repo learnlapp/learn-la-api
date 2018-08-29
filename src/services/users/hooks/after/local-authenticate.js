@@ -5,7 +5,7 @@ module.exports = function() {
       phone: context.data.phone,
       password: context.data.password,
     });
-    console.log('local auth', res);
+
     return context;
   };
 };

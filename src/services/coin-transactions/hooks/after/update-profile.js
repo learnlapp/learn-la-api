@@ -1,7 +1,6 @@
 module.exports = function updateProfile() {
   return async context => {
     const { type, amount, ownerType, studentId, teacherId } = context.result;
-    console.log('hi');
 
     if (type === 'in' && ownerType === 'student') {
       context.app

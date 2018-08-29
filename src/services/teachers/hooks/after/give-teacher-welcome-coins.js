@@ -6,7 +6,7 @@ module.exports = function giveTeacherWelcomeCoins() {
 
     const { data } = await context.app
       .service('app-settings')
-      .find({ platform: 'teacher' });
+      .find({ query: { platform: 'teacher' } });
 
     if (data.length <= 0) {
       throw new NOtFound('No app setting found.');

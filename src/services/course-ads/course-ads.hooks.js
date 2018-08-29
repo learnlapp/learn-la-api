@@ -23,6 +23,9 @@ const isAuthenticated = require('../../hooks/is-authenticated');
 const isPlatform = require('../../hooks/is-platform');
 const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
+const isSettingOnline = require('./hooks/before/is-setting-online');
+const chargeCoins = require('./hooks/before/charge-coins');
+
 const getLatestStudentProfile = require('./hooks/after/get-latest-student-profile');
 
 const resolvers = require('./resolvers');
@@ -44,6 +47,8 @@ module.exports = {
     create: [
       authenticate('jwt'),
       associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
+      chargeCoins(),
+      // iff(isSettingOnline(), [chargeCoins()]),
     ],
     update: [disallow()],
     patch: [

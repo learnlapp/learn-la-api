@@ -11,9 +11,8 @@ module.exports = function(app) {
       // coin
       welcomeCoin: { type: Number, default: 200 },
       freeAdsQuota: { type: Number, default: 10 },
-      freeAdsQuotaLeft: { type: Number, default: 10 },
+      coinsPerAdCreation: { type: Number, default: 10 },
       freeApplyQuota: { type: Number, default: 10 },
-      freeApplyQuotaLeft: { type: Number, default: 10 },
 
       // version
       minimumVersion: { type: String, default: '0.0.0' },
