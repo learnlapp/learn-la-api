@@ -26,11 +26,14 @@ module.exports = function chargeCoins() {
       }
 
       await context.app.service('coin-transactions').create({
-        type: 'out',
-        ownerType: 'teacher',
-        teacherId,
-        description: `Charged ${coinsPerAdCreation} coins for activate an Ad.`,
-        ref: 'system',
+        method: 'out',
+        type: 'post-course-ad',
+        handledBy: 'system',
+        ownerType: 'teachers',
+        ownerId: teacherId,
+        description: `Charged ${coinsPerAdCreation} coins for posting an Ad.`,
+        ref: 'course-ads',
+        refId: context.id,
         amount: coinsPerAdCreation,
       });
     }

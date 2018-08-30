@@ -13,11 +13,12 @@ module.exports = function giveStudentWelcomeCoins() {
     }
 
     await context.app.service('coin-transactions').create({
-      type: 'in',
-      ownerType: 'student',
-      studentId: _id,
+      method: 'in',
+      type: 'welcome-coins',
+      handledBy: 'system',
+      ownerType: 'students',
+      ownerId: _id,
       description: `Free ${data[0].welcomeCoin} coins for new sign up.`,
-      ref: 'system',
       amount: data[0].welcomeCoin,
     });
 

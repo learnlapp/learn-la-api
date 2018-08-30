@@ -7,24 +7,23 @@ module.exports = function(app) {
   const { Schema } = mongooseClient;
   const coinTransactions = new Schema(
     {
+      method: { type: String, required: true },
       type: { type: String, required: true }, // in | out
       amount: { type: Number, required: true },
       description: { type: String, required: true },
 
-      ownerType: { type: String }, // student | teacher
-      studentId: { type: Schema.Types.ObjectId },
-      teacherId: { type: Schema.Types.ObjectId },
-
-      ref: { type: String, required: true },
-      paymentId: { type: Schema.Types.ObjectId },
-      matchingId: { type: Schema.Types.ObjectId },
+      handledBy: { type: String, required: true }, // system | admin
       adminId: { type: Schema.Types.ObjectId },
-      courseAdId: { type: Schema.Types.ObjectId },
-      studentAdId: { type: Schema.Types.ObjectId },
+
+      ownerType: { type: String }, // students | teachers
+      ownerId: { type: Schema.Types.ObjectId },
+
+      ref: { type: String },
+      refId: { type: Schema.Types.ObjectId },
     },
     {
       timestamps: true,
-      collection: 'coinTransactions',
+      collection: 'coin-transactions',
     }
   );
 

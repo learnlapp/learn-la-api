@@ -2,13 +2,17 @@ const { BadRequest } = require('@feathersjs/errors');
 
 module.exports = function validate() {
   return async context => {
-    const { ref } = context.data;
+    const { handledBy, ref, refId } = context.data;
 
-    if (!ref) {
-      throw new BadRequest(`field 'ref' is required.`);
+    if ((ref && !refId) || (!ref && refId)) {
+      throw new BadRequest(`Field 'ref' and 'refId' should be exist in pair.`);
     }
 
-    switch (ref) {
+    if (!handledBy) {
+      throw new BadRequest(`Field 'handledBy' is required.`);
+    }
+
+    switch (handledBy) {
       case 'system':
         return context;
 
@@ -18,13 +22,13 @@ module.exports = function validate() {
         }
 
         const admin = await context.app.service('users').get(adminId);
-        if (!admin) {
-          throw new BadRequest(`admin not found.`);
+        if (!admin && admin.roles.indexOf('admin') !== -1) {
+          throw new BadRequest(`Admin not found.`);
         }
 
-        return context;
+        break;
       default:
-        throw new BadRequest(`.`);
+        break;
     }
     return context;
   };
