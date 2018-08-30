@@ -7,7 +7,7 @@ module.exports = function associateUsers() {
 
     if ((!courseAdId && !studentAdId) || (courseAdId && studentAdId)) {
       throw new BadRequest(
-        'Either courseAdId or studentAdId should be provided.',
+        'Either courseAdId or studentAdId should be provided.'
       );
     }
 
@@ -22,6 +22,7 @@ module.exports = function associateUsers() {
       const { teacherId } = await context.app
         .service('course-ads')
         .get(courseAdId, context.params);
+
       context.data.teacherId = teacherId;
       context.data.studentId = payload.studentId;
       context.data.type = 'course';
@@ -32,6 +33,7 @@ module.exports = function associateUsers() {
       const { studentId } = await context.app
         .service('student-ads')
         .get(studentAdId, context.params);
+
       context.data.teacherId = payload.teacherId;
       context.data.studentId = studentId;
       context.data.type = 'student';
