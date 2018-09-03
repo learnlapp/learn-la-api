@@ -44,7 +44,7 @@ module.exports = {
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
-      iff(isProvider('external'), [isOwner(), exchangePhoneCheck()]),
+      iff(isProvider('external'), [exchangePhoneCheck()]),
     ],
     remove: [disallow()],
   },
