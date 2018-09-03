@@ -19,6 +19,7 @@ const {
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
+const isAuthenticated = require('../../hooks/is-authenticated');
 const isPlatform = require('../../hooks/is-platform');
 const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
 
