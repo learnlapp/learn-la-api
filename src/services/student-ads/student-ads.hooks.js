@@ -64,9 +64,11 @@ module.exports = {
   after: {
     all: [
       fastJoin(resolvers, setFastJoinQuery()),
-      iff(isPlatform('teacher'), [
-        getLatestTeacherProfile(),
-        serialize(schema),
+      iff(isAuthenticated(), [
+        iff(isPlatform('teacher'), [
+          getLatestTeacherProfile(),
+          serialize(schema),
+        ]),
       ]),
     ],
     find: [],
