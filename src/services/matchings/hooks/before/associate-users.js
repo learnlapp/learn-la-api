@@ -21,7 +21,7 @@ module.exports = function associateUsers() {
     if (courseAdId) {
       const { teacherId } = await context.app
         .service('course-ads')
-        .get(courseAdId, context.params);
+        .get(courseAdId);
 
       context.data.teacherId = teacherId;
       context.data.studentId = payload.studentId;
@@ -32,7 +32,7 @@ module.exports = function associateUsers() {
     if (studentAdId) {
       const { studentId } = await context.app
         .service('student-ads')
-        .get(studentAdId, context.params);
+        .get(studentAdId);
 
       context.data.teacherId = payload.teacherId;
       context.data.studentId = studentId;
