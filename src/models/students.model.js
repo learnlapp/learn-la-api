@@ -1,7 +1,3 @@
-// students-model.js - A mongoose model
-//
-// See http://mongoosejs.com/docs/models.html
-// for more of what you can do here.
 const {
   LocationSchema,
   VerificationSchema,
@@ -14,12 +10,17 @@ module.exports = function(app) {
   const { Schema } = mongooseClient;
   const students = new Schema(
     {
-      userId: { type: Schema.Types.ObjectId, required: true, unique: true },
-      name: { type: String },
+      facebookId: { type: String, unique: true, sparse: true },
+      phone: { type: String, unique: true, sparse: true },
+      phoneNumber: { type: String },
+      countryCode: { type: String },
+
+      password: { type: String },
+
+      name: { type: String, requiredd: true },
       avatar: { type: String },
       birthday: { type: Date },
       gender: { type: String, lowercase: true },
-
       role: { type: String, default: 'student' }, // personal / organization
       childName: { type: String },
       childImage: { type: String },
@@ -41,19 +42,12 @@ module.exports = function(app) {
 
       bookmarks: { type: [Schema.Types.ObjectId] },
 
-      coin: { type: Number },
-      credit: { type: Number },
-      // freeAdsQuota: { type: Number },
-      freeApplyQuota: { type: Number },
-      freeApplyQuotaLeft: { type: Number },
-
       extra: { type: Object },
       device: { type: Object },
       status: { type: String, default: 'new' },
     },
     {
       timestamps: true,
-      collection: 'students',
     }
   );
 

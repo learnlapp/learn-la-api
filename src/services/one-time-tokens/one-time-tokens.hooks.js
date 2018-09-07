@@ -6,7 +6,6 @@ const {
   iff,
   isProvider,
   keep,
-  skipRemainingHooks,
 } = require('feathers-hooks-common');
 
 const hashToken = require('./hooks/before/hash-token');
@@ -16,7 +15,7 @@ module.exports = {
     all: [iff(isProvider('external'), disallow())],
     find: [],
     get: [],
-    create: [hashToken()],
+    create: [disableMultiItemCreate(), hashToken()],
     update: [disallow()],
     patch: [hashToken()],
     remove: [disableMultiItemChange()],

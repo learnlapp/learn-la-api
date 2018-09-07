@@ -3,48 +3,48 @@ const {
   disallow,
   discard,
   disableMultiItemChange,
-  disablePagination,
+  disableMultiItemCreate,
   fastJoin,
   iff,
-  iffElse,
   isProvider,
-  keep,
   paramsFromClient,
   preventChanges,
-  serialize,
-  skipRemainingHooks,
 } = require('feathers-hooks-common');
-// const {
-//   restrictToOwner,
-//   associateCurrentUser,
-// } = require('feathers-authentication-hooks');
 
-// const isAction = require('../../hooks/is-action');
-const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
+const { setExpiredAfter, setFastJoinQuery } = require('../../hooks');
 
-const setExpiredAfter = require('../../hooks/set-expired-after');
-const isOwner = require('./hooks/before/is-owner');
-const exchangePhoneCheck = require('./hooks/before/exchange-phone-check');
+const {
+  associateRelevantIds,
+  isOwner,
+  exchangePhoneCheck,
+} = require('./hooks/before');
 
-const associateUsers = require('./hooks/before/associate-users');
-
-const initLogMsg = require('./hooks/after/init-log-msgs');
+const { initLogMsg } = require('./hooks/after');
 
 const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
     all: [
-      iff(isProvider('external'), authenticate('jwt')),
       paramsFromClient('action'),
+      iff(isProvider('external'), authenticate('jwt')),
     ],
     find: [],
-    get: [],
-    create: [associateUsers(), setExpiredAfter(4, 'hour')],
+    get: [iff(isProvider('external'), isOwner())],
+    create: [
+      disableMultiItemCreate(),
+      associateRelevantIds(),
+      setExpiredAfter(4, 'hour'),
+    ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
-      iff(isProvider('external'), [isOwner(), exchangePhoneCheck()]),
+      iff(isProvider('external'), [
+        c => console.log(c.data),
+
+        isOwner(),
+        exchangePhoneCheck(),
+      ]),
     ],
     remove: [disallow()],
   },
@@ -53,7 +53,7 @@ module.exports = {
     all: [],
     find: [fastJoin(resolvers, setFastJoinQuery())],
     get: [fastJoin(resolvers, setFastJoinQuery())],
-    create: [initLogMsg(), fastJoin(resolvers), setFastJoinQuery()],
+    create: [initLogMsg(), fastJoin(resolvers, setFastJoinQuery())],
     update: [],
     patch: [fastJoin(resolvers, setFastJoinQuery())],
     remove: [],

@@ -1,7 +1,3 @@
-// oneTimeToken-model.js - A mongoose model
-//
-// See http://mongoosejs.com/docs/models.html
-// for more of what you can do here.
 module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
@@ -12,10 +8,10 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
-      collection: 'oneTimeTokens',
-    },
+      collection: 'one-time-tokens',
+    }
   );
 
-  oneTimeTokens.index({ updatedAt: 1 }, { expireAfterSeconds: 6000 });
+  oneTimeTokens.index({ updatedAt: 1 }, { expireAfterSeconds: 900 });
   return mongooseClient.model('oneTimeTokens', oneTimeTokens);
 };

@@ -1,35 +1,36 @@
 const resolvers = {
   joins: {
-    teacher: (...args) => async (matching, context) => {
-      let fastJoinQuery = { user: false };
+    student: () => async (ticket, context) => {
+      const $select = { password: 0, phone: 0, phoneNumber: 0 };
 
-      if (matching.isStudentPhoneGiven && matching.isTeacherPhoneGiven) {
-        fastJoinQuery = { user: true };
-      }
-
-      return (matching.teacher = await context.app
-        .service('teachers')
-        .get(matching.teacherId, {
+      return (ticket.student = await context.app
+        .service('students')
+        .get(ticket.studentId, {
           query: {
-            // $select: { password: 0 },
+            $select,
           },
-          fastJoinQuery,
         }));
     },
-    student: (...args) => async (matching, context) => {
-      let fastJoinQuery = { user: false };
 
-      if (matching.isStudentPhoneGiven && matching.isTeacherPhoneGiven) {
-        fastJoinQuery = { user: true };
-      }
+    teacher: () => async (ticket, context) => {
+      const $select = { password: 0, phone: 0, phoneNumber: 0 };
 
-      return (matching.student = await context.app
-        .service('students')
-        .get(matching.studentId, {
+      return (ticket.student = await context.app
+        .service('teachers')
+        .get(ticket.teacherId, {
           query: {
-            // $select: { password: 0 },
+            $select,
           },
-          fastJoinQuery,
+        }));
+    },
+
+    matching: () => async (ticket, context) => {
+      return (ticket.matching = await context.app
+        .service('matchings')
+        .get(ticket.matchingId, {
+          query: {
+            // $select,
+          },
         }));
     },
   },

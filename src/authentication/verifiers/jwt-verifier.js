@@ -1,20 +1,31 @@
 const { Verifier } = require('@feathersjs/authentication-jwt');
+const { GeneralError, NotFound } = require('@feathersjs/errors');
 
-class CustomVerifier extends Verifier {
+class JwtVerifier extends Verifier {
   // The verify function has the exact same inputs and
   // return values as a vanilla passport strategy
   async verify(req, payload, done) {
     const app = this.app;
-    // do your custom stuff. You can call internal Verifier methods
-    // and reference this.app and this.options. This method must be implemented.
-    const user = await app.service('users').get(payload.userId);
-    const profile = await app.service('teachers').get(user.teacherId);
-    console.log('*************');
+    const { platform } = payload;
+    const id = payload[`${platform}Id`];
 
-    // the 'user' variable can be any truthy value
-    // the 'payload' is the payload for the JWT access token that is generated after successful authentication
-    done(null, user, payload);
+    try {
+      if (!platform) {
+        throw new GeneralError(`Missing 'platform' in payload.`);
+      }
+
+      const user = await app.service(`${platform}s`).get(id);
+
+      if (!user) {
+        throw new NotFound();
+      }
+
+      // payload = { [`${platform}Id`]: user._id, platform };
+      done(null, user, payload);
+    } catch (err) {
+      done(err);
+    }
   }
 }
 
-module.exports = CustomVerifier;
+module.exports = JwtVerifier;

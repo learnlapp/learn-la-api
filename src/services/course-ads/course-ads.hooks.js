@@ -1,81 +1,77 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
   disallow,
-  discard,
+  // discard,
   disableMultiItemChange,
-  disablePagination,
+  disableMultiItemCreate,
   fastJoin,
   iff,
   iffElse,
   isProvider,
-  keep,
   paramsFromClient,
-  preventChanges,
-  serialize,
-  skipRemainingHooks,
+  // preventChanges,
+  // serialize,
 } = require('feathers-hooks-common');
 const {
   restrictToOwner,
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
-const isAuthenticated = require('../../hooks/is-authenticated');
-const isPlatform = require('../../hooks/is-platform');
-const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
-
-const isSettingOnline = require('./hooks/before/is-setting-online');
-const chargeCoins = require('./hooks/before/charge-coins');
-
-const getLatestStudentProfile = require('./hooks/after/get-latest-student-profile');
+const {
+  isAuthenticated,
+  isPlatform,
+  refreshParamsEntity,
+  setFastJoinQuery,
+} = require('../../hooks');
 
 const resolvers = require('./resolvers');
 
-const schema = require('./schema');
-
 module.exports = {
   before: {
-    all: [
-      // paramsFromClient('action', 'paginate'),
-    ],
+    all: [paramsFromClient('action')],
     find: [],
     get: [
       iff(isProvider('external'), [
         authenticate('jwt'),
-        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
+        iffElse(
+          isPlatform('teacher'),
+          [restrictToOwner({ idField: '_id', ownerField: 'teacherId' })],
+          [disallow()]
+        ),
       ]),
     ],
     create: [
-      authenticate('jwt'),
-      associateCurrentUser({ idField: 'teacherId', as: 'teacherId' }),
-      // iff(isSettingOnline(), [chargeCoins()]),
+      disableMultiItemCreate(),
+      iff(isProvider('external'), [
+        authenticate('jwt'),
+        iffElse(
+          isPlatform('teacher'),
+          [associateCurrentUser({ idField: '_id', as: 'teacherId' })],
+          [disallow()]
+        ),
+      ]),
     ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
       iff(isProvider('external'), [
         authenticate('jwt'),
-        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
-        iff(isSettingOnline(), [chargeCoins()]),
+        iffElse(
+          isPlatform('teacher'),
+          [restrictToOwner({ idField: '_id', ownerField: 'teacherId' })],
+          [disallow()]
+        ),
       ]),
     ],
-    remove: [
-      disableMultiItemChange(),
-      iff(isProvider('external'), [
-        authenticate('jwt'),
-        restrictToOwner({ idField: 'teacherId', ownerField: 'teacherId' }),
-      ]),
-    ],
+    remove: [disallow()],
   },
 
   after: {
     all: [
-      fastJoin(resolvers, setFastJoinQuery()),
       iff(isAuthenticated(), [
-        iff(isPlatform('student'), [
-          getLatestStudentProfile(),
-          serialize(schema),
-        ]),
+        iff(isPlatform('student'), refreshParamsEntity('student')),
       ]),
+      fastJoin(resolvers, setFastJoinQuery()),
     ],
     find: [],
     get: [],

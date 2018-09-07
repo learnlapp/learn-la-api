@@ -1,14 +1,10 @@
-// tickets-model.js - A mongoose model
-//
-// See http://mongoosejs.com/docs/models.html
-// for more of what you can do here.
 module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
 
   const logSchema = new Schema(
     {
-      userId: { type: Schema.Types.ObjectId, required: true },
+      adminId: { type: Schema.Types.ObjectId, required: true },
       tex: { type: String, required: true },
     },
     {
@@ -19,10 +15,9 @@ module.exports = function(app) {
   const tickets = new Schema(
     {
       platform: { type: String, required: true },
+      type: { type: String, required: true },
       studentId: { type: Schema.Types.ObjectId },
       teacherId: { type: Schema.Types.ObjectId },
-
-      type: { type: String, required: true },
       matchingId: { type: Schema.Types.ObjectId },
       reason: { type: String },
       content: { type: String, required: true },

@@ -1,7 +1,3 @@
-// teachers-model.js - A mongoose model
-//
-// See http://mongoosejs.com/docs/models.html
-// for more of what you can do here.
 const {
   LocationSchema,
   VerificationSchema,
@@ -12,10 +8,14 @@ const {
 module.exports = function(app) {
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
-
   const teachers = new Schema(
     {
-      userId: { type: Schema.Types.ObjectId, required: true, unique: true },
+      facebookId: { type: String, unique: true, sparse: true },
+      phone: { type: String, unique: true, sparse: true },
+      phoneNumber: { type: String },
+      countryCode: { type: String },
+      password: { type: String },
+
       name: { type: String },
       avatar: { type: String },
       birthday: { type: Date },
@@ -50,19 +50,12 @@ module.exports = function(app) {
 
       bookmarks: { type: [Schema.Types.ObjectId] },
 
-      coin: { type: Number },
-      credit: { type: Number },
-      // freeAdsQuota: { type: Number },
-      freeApplyQuota: { type: Number },
-      freeApplyQuotaLeft: { type: Number },
-
       extra: { type: Object },
       device: { type: Object },
       status: { type: String, default: 'new' },
     },
     {
       timestamps: true,
-      collection: 'teachers',
     }
   );
 

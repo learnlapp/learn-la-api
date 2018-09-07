@@ -1,72 +1,104 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
-  disallow,
+  hashPassword,
+  protect,
+} = require('@feathersjs/authentication-local').hooks;
+const {
   discard,
   disableMultiItemChange,
-  disablePagination,
-  fastJoin,
+  disableMultiItemCreate,
+  disallow,
   iff,
   iffElse,
+  isNot,
   isProvider,
   keep,
   paramsFromClient,
   preventChanges,
-  skipRemainingHooks,
 } = require('feathers-hooks-common');
+const { restrictToOwner } = require('feathers-authentication-hooks');
+
+const { isAction } = require('../../hooks');
 const {
-  restrictToOwner,
-  associateCurrentUser,
-} = require('feathers-authentication-hooks');
-
-const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
-
-// Before hooks
-const extractAndUpdateUserInfo = require('./hooks/before/extract-and-update-user-info');
-const initTeacherQuota = require('./hooks/before/init-teacher-quota');
-
-// After hooks
-const saveTeacherToUser = require('./hooks/after/save-teacher-to-user');
-const giveTeacherWelcomeCoins = require('./hooks/after/give-teacher-welcome-coins');
-
-const resolvers = require('./resolvers');
+  constructPhone,
+  isNewUser,
+  processDataFromFacebook,
+  verifyOneTimeToken,
+} = require('./hooks/before');
+const { requestSMSVerifyCode } = require('./hooks/after');
 
 module.exports = {
   before: {
-    all: [iff(isProvider('external'), [authenticate('jwt')])],
-    find: [],
-    get: [],
-    create: [initTeacherQuota()],
+    all: [paramsFromClient('action')],
+    find: [
+      iff(isProvider('external'), [
+        iff(isNot(isAction('phone-sign-up')), authenticate('jwt')),
+      ]),
+    ],
+    get: [
+      iff(isProvider('external'), [
+        authenticate('jwt'),
+        restrictToOwner({ idField: '_id', ownerField: '_id' }),
+      ]),
+    ],
+    create: [
+      disableMultiItemCreate(),
+      iffElse(
+        isAction('facebook-sign-up'),
+        [processDataFromFacebook()],
+        [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
+      ),
+    ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
-      extractAndUpdateUserInfo(),
-      iff(
-        isProvider('external'),
-        preventChanges(
-          false,
-          'coin',
-          'credit',
-          'freeAdsQuota',
-          'freeAdsQuotaLeft',
-          'freeApplyQuota',
-          'freeApplyQuotaLeft'
-        )
-      ),
+      iff(isProvider('external'), [
+        iffElse(
+          isAction('reset-password'),
+          [
+            constructPhone(),
+            verifyOneTimeToken(),
+            preventChanges(false, 'phone', 'phoneNumber', 'countryCode'),
+          ],
+          [
+            authenticate('jwt'),
+            restrictToOwner({ idField: '_id', ownerField: '_id' }),
+            iffElse(
+              isAction('update-phone'),
+              [constructPhone(), verifyOneTimeToken()],
+              [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
+            ),
+          ]
+        ),
+      ]),
+      hashPassword(),
+    ],
+    remove: [disableMultiItemChange(), authenticate('jwt')],
+  },
+
+  after: {
+    all: [protect('password')],
+    find: [
+      iff(isAction('phone-sign-up'), [
+        requestSMSVerifyCode(),
+        keep('_id', 'createdAt'),
+      ]),
     ],
     remove: [disallow()],
   },
 
   after: {
-    all: [],
-    find: [fastJoin(resolvers, setFastJoinQuery())],
-    get: [fastJoin(resolvers, setFastJoinQuery())],
-    create: [
-      giveTeacherWelcomeCoins(),
-      saveTeacherToUser(),
-      fastJoin(resolvers, setFastJoinQuery()),
+    all: [protect('password')],
+    find: [
+      iff(isAction('phone-sign-up'), [
+        requestSMSVerifyCode(),
+        keep('_id', 'createdAt'),
+      ]),
     ],
+    get: [],
+    create: [],
     update: [],
-    patch: [fastJoin(resolvers, setFastJoinQuery())],
+    patch: [iff(isAction('reset-password'), keep('_id'))],
     remove: [],
   },
 

@@ -14,9 +14,12 @@ const middleware = require('./middleware');
 const services = require('./services');
 const appHooks = require('./app.hooks');
 const channels = require('./channels');
+
 const mongoose = require('./mongoose');
+const twillio = require('./twillio');
 const authentication = require('./authentication');
-const twillioApi = require('./twillio-api');
+
+const verifyPhone = require('./twillio/verify-phone');
 
 const app = express(feathers());
 
@@ -34,14 +37,10 @@ app.use('/', express.static(app.get('public')));
 
 // Set up Plugins and providers
 app.configure(express.rest());
-app.configure(
-  socketio({
-    pingInterval: 10000,
-    pingTimeout: 50000,
-  }),
-);
+app.configure(socketio());
 
 app.configure(mongoose);
+app.configure(twillio);
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
@@ -51,7 +50,9 @@ app.configure(services);
 // Set up event channels (see channels.js)
 app.configure(channels);
 
-app.configure(twillioApi);
+// additional routes
+app.configure(verifyPhone);
+
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
 app.use(express.errorHandler({ logger }));

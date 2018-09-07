@@ -1,4 +1,4 @@
-// Initializes the `courseAds` service on path `/course-ads`
+// Initializes the `course-ads` service on path `/course-ads`
 const createService = require('feathers-mongoose');
 const createModel = require('../../models/course-ads.model');
 const hooks = require('./course-ads.hooks');

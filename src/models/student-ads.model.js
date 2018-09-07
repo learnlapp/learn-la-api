@@ -29,13 +29,13 @@ module.exports = function(app) {
 
       expiredAt: { type: Date },
       removedAt: { type: Date },
-      onlineAt: { type: Date, default: null },
+      onlineAt: { type: Date },
       // new -> complete -> archive | Del
       status: { type: String, required: true, default: 'new' },
     },
     {
       timestamps: true,
-      collection: 'studentAds',
+      collection: 'student-ads',
     }
   );
 

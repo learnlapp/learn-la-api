@@ -2,40 +2,51 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
   disallow,
   disableMultiItemChange,
+  disableMultiItemCreate,
   fastJoin,
   iff,
+  isNot,
+  isProvider,
 } = require('feathers-hooks-common');
 
 const {
-  // restrictToOwner,
+  restrictToOwner,
   associateCurrentUser,
 } = require('feathers-authentication-hooks');
 
-const setFastJoinQuery = require('../../hooks/set-fastJoin-query');
+const { isPlatform, setFastJoinQuery } = require('../../hooks');
 
-const isPlatform = require('../../hooks/is-platform');
-
-const setTicketPlatform = require('./hooks/before/set-ticket-platform');
+const { setTicketPlatform } = require('./hooks/before');
 
 const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [authenticate('jwt')],
+    all: [iff(isProvider('external'), [authenticate('jwt')])],
     find: [],
     get: [],
     create: [
+      disableMultiItemCreate(),
       iff(isPlatform('student'), [
-        associateCurrentUser({ idField: 'studentId', as: 'studentId' }),
+        associateCurrentUser({ idField: '_id', as: 'studentId' }),
         setTicketPlatform('student'),
       ]),
       iff(isPlatform('teacher'), [
-        associateCurrentUser({ idField: 'studentId', as: 'teacherId' }),
+        associateCurrentUser({ idField: '_id', as: 'teacherId' }),
         setTicketPlatform('teacher'),
       ]),
     ],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
+    patch: [
+      disableMultiItemChange(),
+      iff(isPlatform('student'), [
+        restrictToOwner({ idField: '_id', ownerField: 'studentId' }),
+      ]),
+      iff(isPlatform('teacher'), [
+        restrictToOwner({ idField: '_id', ownerField: 'teacherId' }),
+      ]),
+      iff(isNot(isPlatform('admin')), disallow()),
+    ],
     remove: [disallow()],
   },
 
