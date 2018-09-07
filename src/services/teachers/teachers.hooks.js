@@ -18,7 +18,7 @@ const {
 } = require('feathers-hooks-common');
 const { restrictToOwner } = require('feathers-authentication-hooks');
 
-const { isAction } = require('../../hooks');
+const { isAction, isPlatform } = require('../../hooks');
 const {
   constructPhone,
   isNewUser,
@@ -38,7 +38,11 @@ module.exports = {
     get: [
       iff(isProvider('external'), [
         authenticate('jwt'),
-        restrictToOwner({ idField: '_id', ownerField: '_id' }),
+        iffElse(
+          isPlatform('teacher'),
+          [restrictToOwner({ idField: '_id', ownerField: '_id' })],
+          [iff(isNot(isPlatform('admin')), disallow())]
+        ),
       ]),
     ],
     create: [
@@ -46,7 +50,12 @@ module.exports = {
       iffElse(
         isAction('facebook-sign-up'),
         [processDataFromFacebook()],
-        [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
+        [
+          constructPhone(),
+          isNewUser(),
+          iff(isPlatform('teacher'), [verifyOneTimeToken()]),
+          hashPassword(),
+        ]
       ),
     ],
     update: [disallow()],
