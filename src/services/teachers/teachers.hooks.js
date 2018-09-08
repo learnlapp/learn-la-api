@@ -4,7 +4,7 @@ const {
   protect,
 } = require('@feathersjs/authentication-local').hooks;
 const {
-  discard,
+  // discard,
   disableMultiItemChange,
   disableMultiItemCreate,
   disallow,
@@ -32,7 +32,11 @@ module.exports = {
     all: [paramsFromClient('action')],
     find: [
       iff(isProvider('external'), [
-        iff(isNot(isAction('phone-sign-up')), authenticate('jwt')),
+        iffElse(
+          isPlatform('teacher') || isPlatform('admin'),
+          [iff(isNot(isAction('phone-sign-up')), authenticate('jwt'))],
+          [disallow()]
+        ),
       ]),
     ],
     get: [
@@ -41,7 +45,7 @@ module.exports = {
         iffElse(
           isPlatform('teacher'),
           [restrictToOwner({ idField: '_id', ownerField: '_id' })],
-          [iff(isNot(isPlatform('admin')), disallow())]
+          [iff(isNot(isPlatform('admin')), [disallow()])]
         ),
       ]),
     ],
@@ -50,12 +54,7 @@ module.exports = {
       iffElse(
         isAction('facebook-sign-up'),
         [processDataFromFacebook()],
-        [
-          constructPhone(),
-          isNewUser(),
-          iff(isPlatform('teacher'), [verifyOneTimeToken()]),
-          hashPassword(),
-        ]
+        [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
       ),
     ],
     update: [disallow()],
@@ -71,11 +70,23 @@ module.exports = {
           ],
           [
             authenticate('jwt'),
-            restrictToOwner({ idField: '_id', ownerField: '_id' }),
             iffElse(
-              isAction('update-phone'),
-              [constructPhone(), verifyOneTimeToken()],
-              [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
+              isPlatform('teacher'),
+              [
+                restrictToOwner({ idField: '_id', ownerField: '_id' }),
+                iffElse(
+                  isAction('update-phone'),
+                  [constructPhone(), verifyOneTimeToken()],
+                  [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
+                ),
+              ],
+              [
+                iffElse(
+                  isNot(isPlatform('admin')),
+                  [disallow()],
+                  [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
+                ),
+              ]
             ),
           ]
         ),
@@ -83,17 +94,6 @@ module.exports = {
       hashPassword(),
     ],
     remove: [disableMultiItemChange(), authenticate('jwt')],
-  },
-
-  after: {
-    all: [protect('password')],
-    find: [
-      iff(isAction('phone-sign-up'), [
-        requestSMSVerifyCode(),
-        keep('_id', 'createdAt'),
-      ]),
-    ],
-    remove: [disallow()],
   },
 
   after: {
