@@ -6,6 +6,7 @@ const {
   iff,
   isProvider,
   isNot,
+  preventChanges,
 } = require('feathers-hooks-common');
 
 const { isPlatform } = require('../../hooks');
@@ -29,6 +30,7 @@ module.exports = {
         authenticate('jwt'),
         iff(isNot(isPlatform('admin')), disallow()),
       ]),
+      preventChanges(false, 'platform'),
     ],
     remove: [disallow()],
   },

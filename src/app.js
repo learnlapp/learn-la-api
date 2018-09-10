@@ -16,8 +16,9 @@ const appHooks = require('./app.hooks');
 const channels = require('./channels');
 
 const mongoose = require('./mongoose');
-const twillio = require('./twillio');
 const authentication = require('./authentication');
+const twillio = require('./twillio');
+const globalVars = require('./globalVars');
 
 const verifyPhone = require('./twillio/verify-phone');
 
@@ -52,7 +53,7 @@ app.configure(channels);
 
 // additional routes
 app.configure(verifyPhone);
-
+app.configure(globalVars());
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
 app.use(express.errorHandler({ logger }));
