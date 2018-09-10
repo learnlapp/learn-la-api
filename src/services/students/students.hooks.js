@@ -32,11 +32,10 @@ module.exports = {
     all: [paramsFromClient('action')],
     find: [
       iff(isProvider('external'), [
-        iffElse(
-          isPlatform('student') || isPlatform('admin'),
-          [iff(isNot(isAction('phone-sign-up')), authenticate('jwt'))],
-          [disallow()]
-        ),
+        iff(isNot(isAction('phone-sign-up')), [
+          authenticate('jwt'),
+          iff(!isPlatform('student') && !isPlatform('admin'), [disallow()]),
+        ]),
       ]),
     ],
     get: [
