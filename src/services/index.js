@@ -9,6 +9,7 @@ const tickets = require('./tickets/tickets.service.js');
 const settings = require('./settings/settings.service.js');
 const admins = require('./admins/admins.service.js');
 const mediaTrash = require('./media-trash/media-trash.service.js');
+const coinTransactions = require('./coin-transactions/coin-transactions.service.js');
 // eslint-disable-next-line no-unused-vars
 module.exports = function (app) {
   app.configure(students);
@@ -22,4 +23,5 @@ module.exports = function (app) {
   app.configure(settings);
   app.configure(admins);
   app.configure(mediaTrash);
+  app.configure(coinTransactions);
 };
