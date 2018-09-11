@@ -5,7 +5,7 @@ module.exports = function(app) {
   const logSchema = new Schema(
     {
       adminId: { type: Schema.Types.ObjectId, required: true },
-      tex: { type: String, required: true },
+      text: { type: String, required: true },
     },
     {
       timestamps: true,
@@ -16,11 +16,9 @@ module.exports = function(app) {
     {
       platform: { type: String, required: true },
       type: { type: String, required: true }, // feedback | help | reportError | reportUser
-      ownerType: { type: String, required: true },
       ownerId: { type: Schema.Types.ObjectId, required: true },
-      studentId: { type: Schema.Types.ObjectId },
-      teacherId: { type: Schema.Types.ObjectId },
-      matchingId: { type: Schema.Types.ObjectId },
+      ref: { type: String },
+      refId: { type: String },
       reason: { type: String },
       content: { type: String, required: true },
       images: { type: [String] },

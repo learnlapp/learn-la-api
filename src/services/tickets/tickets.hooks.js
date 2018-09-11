@@ -5,16 +5,18 @@ const {
   disableMultiItemCreate,
   fastJoin,
   iff,
+  iffElse,
   isNot,
   isProvider,
+  preventChanges,
 } = require('feathers-hooks-common');
+const { associateCurrentUser } = require('feathers-authentication-hooks');
 
 const {
-  restrictToOwner,
-  associateCurrentUser,
-} = require('feathers-authentication-hooks');
-
-const { isPlatform, setFastJoinQuery } = require('../../hooks');
+  _restrictToOwner,
+  isPlatform,
+  setFastJoinQuery,
+} = require('../../hooks');
 
 const { setTicketPlatform } = require('./hooks/before');
 
@@ -27,36 +29,35 @@ module.exports = {
     get: [],
     create: [
       disableMultiItemCreate(),
-      iff(isPlatform('student'), [
-        associateCurrentUser({ idField: '_id', as: 'studentId' }),
-        setTicketPlatform('student'),
-      ]),
-      iff(isPlatform('teacher'), [
-        associateCurrentUser({ idField: '_id', as: 'teacherId' }),
-        setTicketPlatform('teacher'),
-      ]),
+      iffElse(
+        ctx => isPlatform('student') || isPlatform('teacher'),
+        [
+          associateCurrentUser({ idField: '_id', as: 'ownerId' }),
+          setTicketPlatform(),
+        ],
+        [disallow()]
+      ),
     ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
-      iff(isPlatform('student'), [
-        restrictToOwner({ idField: '_id', ownerField: 'studentId' }),
-      ]),
-      iff(isPlatform('teacher'), [
-        restrictToOwner({ idField: '_id', ownerField: 'teacherId' }),
-      ]),
-      iff(isNot(isPlatform('admin')), disallow()),
+      iffElse(
+        ctx => isPlatform('student') || isPlatfrom('teacher'),
+        [_restrictToOwner({ ownerField: 'ownerId' })],
+        [iff(isNot(isPlatform('admin')), [disallow()])]
+      ),
+      preventChanges(false, 'type', 'platform', 'ownerId'),
     ],
     remove: [disallow()],
   },
 
   after: {
-    all: [],
+    all: [iff(isPlatform('admin'), [fastJoin(resolvers, setFastJoinQuery())])],
     find: [],
     get: [],
     create: [],
     update: [],
-    patch: [fastJoin(resolvers, setFastJoinQuery())],
+    patch: [],
     remove: [],
   },
 

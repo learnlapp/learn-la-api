@@ -2,20 +2,26 @@ const { authenticate } = require('@feathersjs/authentication').hooks;
 const {
   disallow,
   iff,
+  isNot,
   isProvider,
   fastJoin,
 } = require('feathers-hooks-common');
 
-const validate = require('./hooks/before/validate');
-
-const updateProfile = require('./hooks/after/update-profile');
+const { isPlatform } = require('../../hooks');
+const { validate } = require('./hooks/before');
+const { updateWallet } = require('./hooks/after');
 
 module.exports = {
   before: {
     all: [iff(isProvider('external'), authenticate('jwt'))],
     find: [],
     get: [],
-    create: [iff(isProvider('external'), disallow()), validate()],
+    create: [
+      iff(isProvider('external'), [
+        iff(isNot(isPlatform('admin')), [disallow()]),
+      ]),
+      validate(),
+    ],
     update: [disallow()],
     patch: [disallow()],
     remove: [disallow()],
@@ -25,7 +31,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [updateProfile()],
+    create: [updateWallet()],
     update: [],
     patch: [],
     remove: [],

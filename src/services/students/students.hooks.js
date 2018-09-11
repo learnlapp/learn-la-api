@@ -34,7 +34,9 @@ module.exports = {
       iff(isProvider('external'), [
         iff(isNot(isAction('phone-sign-up')), [
           authenticate('jwt'),
-          iff(!isPlatform('student') && !isPlatform('admin'), [disallow()]),
+          iff(ctx => !isPlatform('student') && !isPlatform('admin'), [
+            disallow(),
+          ]),
         ]),
       ]),
     ],

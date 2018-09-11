@@ -1,3 +1,4 @@
+const _restrictToOwner = require('./_restrict-to-owner');
 const isAction = require('./is-action');
 const isAuthenticated = require('./is-authenticated');
 const isPlatform = require('./is-platform');
@@ -7,6 +8,7 @@ const setExpiredAfter = require('./set-expired-after');
 const setFastJoinQuery = require('./set-fast-join-query');
 
 module.exports = {
+  _restrictToOwner,
   isAction,
   isAuthenticated,
   isPlatform,
