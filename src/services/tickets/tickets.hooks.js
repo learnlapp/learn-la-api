@@ -30,7 +30,7 @@ module.exports = {
     create: [
       disableMultiItemCreate(),
       iffElse(
-        ctx => isPlatform('student') || isPlatform('teacher'),
+        ctx => isPlatform('student')(ctx) || isPlatform('teacher')(ctx),
         [
           associateCurrentUser({ idField: '_id', as: 'ownerId' }),
           setTicketPlatform(),
@@ -42,7 +42,7 @@ module.exports = {
     patch: [
       disableMultiItemChange(),
       iffElse(
-        ctx => isPlatform('student') || isPlatfrom('teacher'),
+        ctx => isPlatform('student')(ctx) || isPlatform('teacher')(ctx),
         [_restrictToOwner({ ownerField: 'ownerId' })],
         [iff(isNot(isPlatform('admin')), [disallow()])]
       ),

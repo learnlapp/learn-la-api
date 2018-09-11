@@ -43,14 +43,8 @@ module.exports = {
     ],
     create: [
       disableMultiItemCreate(),
-      // iffElse(
-      //   isAction('facebook-sign-up'),
-      //   [processDataFromFacebook()],
-      //   [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
-      // ),
       constructPhone(),
       isNewUser(),
-      // verifyOneTimeToken(),
       hashPassword(),
     ],
     update: [disallow()],
