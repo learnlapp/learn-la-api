@@ -25,11 +25,11 @@ const {
   processDataFromFacebook,
   verifyOneTimeToken,
 } = require('./hooks/before');
-const { requestSMSVerifyCode } = require('./hooks/after');
+const { requestSMSVerifyCode, verificationApproval } = require('./hooks/after');
 
 module.exports = {
   before: {
-    all: [paramsFromClient('action')],
+    all: [paramsFromClient('action', 'documentId')],
     find: [
       iff(isProvider('external'), [
         iff(isNot(isAction('phone-sign-up')), [
@@ -71,6 +71,8 @@ module.exports = {
           ],
           [
             authenticate('jwt'),
+            // iff(isNot(isPlatform('admin')), [disableMultiItemChange()]),
+
             iffElse(
               isPlatform('teacher'),
               [
@@ -108,7 +110,12 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [iff(isAction('reset-password'), keep('_id'))],
+    patch: [
+      // ctx => console.log('ctx.params.action', ctx.params),
+
+      iff(isAction('reset-password'), keep('_id')),
+      iff(isAction('verification-approval'), verificationApproval()),
+    ],
     remove: [],
   },
 

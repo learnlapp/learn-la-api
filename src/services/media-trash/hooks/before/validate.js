@@ -2,18 +2,12 @@ const { BadRequest } = require('@feathersjs/errors');
 
 module.exports = function validate() {
   return context => {
-    const { model, subdocument } = context.data;
+    const { subdocument, subdocumentId } = context.data;
 
-    if (!model) {
-      throw new BadRequest('model is required.');
-    }
-
-    if (!context.data[`${model.slice(0, -1)}Id`]) {
-      throw new BadRequest(`${model.slice(0, -1)}Id is required.`);
-    }
-
-    if (subdocument && !context.data[`${subdocument.slice(0, -1)}Id`]) {
-      throw new BadRequest(`${subdocument.slice(0, -1)}Id is requiired.`);
+    if ((subdocument && !subdocumentId) || (!subdocument && subdocumentId)) {
+      throw new BadRequest(
+        `subdocument and subdocumentId should be supply in pairs.`
+      );
     }
 
     return context;

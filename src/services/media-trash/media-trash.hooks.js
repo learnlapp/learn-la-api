@@ -10,15 +10,7 @@ module.exports = {
     all: [iff(isProvider('external'), authenticate('jwt'))],
     find: [disallow()],
     get: [disallow()],
-    create: [
-      iff(isPlatform('student'), [
-        associateCurrentUser({ idField: '_id', as: 'studentId' }),
-      ]),
-      iff(isPlatform('teacher'), [
-        associateCurrentUser({ idField: '_id', as: 'teacherId' }),
-      ]),
-      validate(),
-    ],
+    create: [validate()],
     update: [disallow()],
     patch: [disallow()],
     remove: [disallow()],
