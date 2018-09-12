@@ -25,7 +25,7 @@ const {
   processDataFromFacebook,
   verifyOneTimeToken,
 } = require('./hooks/before');
-const { requestSMSVerifyCode } = require('./hooks/after');
+const { requestSMSVerifyCode, verificationApproval } = require('./hooks/after');
 
 module.exports = {
   before: {
@@ -71,6 +71,9 @@ module.exports = {
           ],
           [
             authenticate('jwt'),
+            iff(isAction('verification-approval'), [
+              iff(isNot(isPlatform('admin')), [disallow()]),
+            ]),
             iffElse(
               isPlatform('student'),
               [
@@ -108,7 +111,10 @@ module.exports = {
     get: [],
     create: [],
     update: [],
-    patch: [iff(isAction('reset-password'), keep('_id'))],
+    patch: [
+      iff(isAction('reset-password'), keep('_id')),
+      iff(isAction('verification-approval'), [verificationApproval()]),
+    ],
     remove: [],
   },
 
