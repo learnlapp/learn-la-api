@@ -12,7 +12,7 @@ module.exports = function(app) {
     },
     {
       timestamps: true,
-      collection: 'matchingLogs',
+      collection: 'matching-logs',
     }
   );
 

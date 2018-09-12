@@ -1,4 +1,4 @@
-const { BadRequest } = require('@feathersjs/errors');
+const { BadRequest, GeneralError } = require('@feathersjs/errors');
 
 module.exports = function verificationAprroval() {
   return async context => {
@@ -11,10 +11,10 @@ module.exports = function verificationAprroval() {
 
     const verification = verifications.filter(doc =>
       doc._id.equals(subdocumentId)
-    );
-    // console.log('verification', verification);
+    )[0];
+    const { status } = verification;
 
-    switch (verification.status) {
+    switch (status) {
       case 'rejected':
         // send notification
         break;
@@ -26,7 +26,7 @@ module.exports = function verificationAprroval() {
         // console.log('result', context.result);
 
         // notify student if she requested
-        const matchings = await context.app.serice('matchings').find({
+        const matchings = await context.app.service('matchings').find({
           query: {
             teacherId: _id,
             // expiredAt - to be considered
@@ -36,35 +36,37 @@ module.exports = function verificationAprroval() {
           paginate: false,
           fastJoinQuery: { student: 0, teacher: 0 },
         });
-        // console.log('matchings', matchings);
 
         if (matchings.length) {
           // Find all matching logs with verification requested in the given list.
-          matchings.map(async mataching => {
-            const matchingLog = await context.app
-              .service('matching-logs')
-              .find({
-                query: {
-                  matchingId: matching._id,
-                  from: 'student',
-                  logId: 'requestVerificationMsg',
-                  'extra.type': 'id',
-                  $limit: 0,
-                },
-              });
+          matchings.map(async matching => {
+            try {
+              const matchingLog = await context.app
+                .service('matching-logs')
+                .find({
+                  query: {
+                    matchingId: matching._id,
+                    from: 'student',
+                    logId: 'requestVerificationMsg',
+                    'extra.type': 'id',
+                    $limit: 0,
+                  },
+                });
 
-            if (matchingLog.total) {
-              context.app.service('matching-logs').create({
-                matchingId: matching._id,
-                from: 'teacher',
-                to: 'student',
-                logId: 'viewVerificationMsg',
-                extra: { type: 'id' },
-              });
+              if (matchingLog.total) {
+                const res = await context.app.service('matching-logs').create({
+                  matchingId: matching._id,
+                  from: 'teacher',
+                  to: 'student',
+                  logId: 'viewVerificationMsg',
+                  extra: { type: 'id' },
+                });
+              }
+            } catch (err) {
+              throw new GeneralError(err);
             }
           });
         }
-
         break;
 
       default:
