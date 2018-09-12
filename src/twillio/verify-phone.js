@@ -8,6 +8,16 @@ module.exports = function verifyPhone(app) {
     const { phoneNumber, countryCode, verifyCode } = req.body;
     const twillioClient = app.get('twillioClient');
     const verify = promisify(twillioClient.phones().verification_check);
+    const phone = countryCode.trim() + phoneNumber.trim();
+
+    if (process.env.DISABLE_TOKEN_VERIFICATION) {
+      res.send({
+        message: 'SMS Verification is disabled.',
+        success: true,
+        phone,
+        token: null,
+      });
+    }
 
     try {
       const twillioResponse = await verify(
@@ -24,7 +34,7 @@ module.exports = function verifyPhone(app) {
         length: 10,
         charset: 'alphabetic',
       });
-      const phone = countryCode.trim() + phoneNumber.trim();
+
       const oneTimeTokens = await app.service('one-time-tokens').patch(
         null,
         { phone, token },
