@@ -2,17 +2,17 @@ const { BadRequest } = require('@feathersjs/errors');
 
 module.exports = function verificationAprroval() {
   return async context => {
-    const { documentId } = context.params;
+    const { subdocumentId } = context.params;
     const { _id, verifications } = context.result;
 
-    if (!documentId) {
-      throw new BadRequest('documentId is required.');
+    if (!subdocumentId) {
+      throw new BadRequest('subdocumentId is required.');
     }
 
     const verification = verifications.filter(doc =>
-      doc._id.equals(documentId)
+      doc._id.equals(subdocumentId)
     );
-    console.log('verification', verification);
+    // console.log('verification', verification);
 
     switch (verification.status) {
       case 'rejected':
@@ -23,7 +23,7 @@ module.exports = function verificationAprroval() {
         // save archievement,
 
         // send notification to teacher
-        console.log('result', context.result);
+        // console.log('result', context.result);
 
         // notify student if she requested
         const matchings = await context.app.serice('matchings').find({
@@ -36,7 +36,7 @@ module.exports = function verificationAprroval() {
           paginate: false,
           fastJoinQuery: { student: 0, teacher: 0 },
         });
-        console.log('matchings', matchings);
+        // console.log('matchings', matchings);
 
         if (matchings.length) {
           // Find all matching logs with verification requested in the given list.
