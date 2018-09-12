@@ -15,7 +15,7 @@ module.exports = function verifyPhone(app) {
         message: 'SMS Verification is disabled.',
         success: true,
         phone,
-        token: null,
+        token: 'token',
       });
     }
 
