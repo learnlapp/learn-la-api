@@ -1,18 +1,16 @@
 const { BadRequest, GeneralError } = require('@feathersjs/errors');
 
-module.exports = function verificationAprroval() {
+module.exports = function courseApproval() {
   return async context => {
     const { subdocumentId } = context.params;
-    const { _id, verifications } = context.result;
+    const { _id, courses } = context.result;
 
     if (!subdocumentId) {
       throw new BadRequest('subdocumentId is required.');
     }
 
-    const verification = verifications.filter(doc =>
-      doc._id.equals(subdocumentId)
-    )[0];
-    const { status, type } = verification;
+    const course = courses.filter(doc => doc._id.equals(subdocumentId))[0];
+    const { status, category, title, level } = course;
 
     switch (status) {
       case 'rejected':
@@ -38,7 +36,7 @@ module.exports = function verificationAprroval() {
         });
 
         if (matchings.length) {
-          // Find all matching logs with verification requested in the given list.
+          // Find all matching logs with course requested in the given list.
           matchings.map(async matching => {
             try {
               const matchingLog = await context.app
@@ -48,7 +46,9 @@ module.exports = function verificationAprroval() {
                     matchingId: matching._id,
                     from: 'student',
                     logId: 'requestVerificationMsg',
-                    'extra.type': type,
+                    'extra.course.category': category,
+                    'extra.course.title': title,
+                    'extra.course.level': level,
                     $limit: 0,
                   },
                 });
@@ -59,7 +59,7 @@ module.exports = function verificationAprroval() {
                   from: 'teacher',
                   to: 'student',
                   logId: 'viewVerificationMsg',
-                  extra: { type: 'id' },
+                  extra: { type: 'course', course },
                 });
               }
             } catch (err) {
