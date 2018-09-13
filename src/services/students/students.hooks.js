@@ -25,7 +25,11 @@ const {
   processDataFromFacebook,
   verifyOneTimeToken,
 } = require('./hooks/before');
-const { requestSMSVerifyCode, verificationApproval } = require('./hooks/after');
+const {
+  giveStudentWelcomeCoins,
+  requestSMSVerifyCode,
+  verificationApproval,
+} = require('./hooks/after');
 
 module.exports = {
   before: {
@@ -109,7 +113,7 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [],
+    create: [giveStudentWelcomeCoins()],
     update: [],
     patch: [
       iff(isAction('reset-password'), keep('_id')),

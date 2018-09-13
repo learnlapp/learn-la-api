@@ -27,6 +27,7 @@ const {
 } = require('./hooks/before');
 const {
   courseApproval,
+  giveTeacherWelcomeCoinss,
   requestSMSVerifyCode,
   verificationApproval,
 } = require('./hooks/after');
@@ -116,7 +117,7 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [],
+    create: [giveTeacherWelcomeCoinss()],
     update: [],
     patch: [
       iff(isAction('reset-password'), keep('_id')),

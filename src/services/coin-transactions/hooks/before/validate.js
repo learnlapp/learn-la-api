@@ -3,7 +3,6 @@ const { BadRequest } = require('@feathersjs/errors');
 module.exports = function validate() {
   return context => {
     const { handledBy, ref, refId } = context.data;
-    const { adminId } = context.params.payload;
 
     if ((ref && !refId) || (!ref && refId)) {
       throw new BadRequest(`Field 'ref' and 'refId' should be exist in pair.`);
@@ -18,6 +17,8 @@ module.exports = function validate() {
         break;
 
       case 'admin':
+        const { adminId } = context.params.payload;
+
         if (!adminId) {
           throw new BadRequest(`'adminId' is required.`);
         }

@@ -20,10 +20,12 @@ const {
 const {
   isAuthenticated,
   isPlatform,
+  isSettingOnline,
   refreshParamsEntity,
   setFastJoinQuery,
 } = require('../../hooks');
 
+const { chargeCoinsForSettingAdOnline } = require('./hooks/before');
 const resolvers = require('./resolvers');
 
 module.exports = {
@@ -58,7 +60,10 @@ module.exports = {
         authenticate('jwt'),
         iffElse(
           isPlatform('teacher'),
-          [restrictToOwner({ idField: '_id', ownerField: 'teacherId' })],
+          [
+            restrictToOwner({ idField: '_id', ownerField: 'teacherId' }),
+            iff(isSettingOnline(), [chargeCoinsForSettingAdOnline()]),
+          ],
           [disallow()]
         ),
       ]),
