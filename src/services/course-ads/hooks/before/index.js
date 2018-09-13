@@ -1,5 +1,5 @@
-const chargeCoinsForSettingAdOnline = require('./charge-coins-for-setting-ad-online');
+const chargeCoinsForSettingOnline = require('./charge-coins-for-setting-online');
 
 module.exports = {
-  chargeCoinsForSettingAdOnline,
+  chargeCoinsForSettingOnline,
 };

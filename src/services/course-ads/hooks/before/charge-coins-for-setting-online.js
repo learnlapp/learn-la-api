@@ -1,6 +1,6 @@
 const { BadRequest } = require('@feathersjs/errors');
 
-module.exports = function chargeCoinsForSettingAdsOnline() {
+module.exports = function chargeCoinsForSettingOnline() {
   return async context => {
     const teacherSettings = context.app.get('appSettings').teacher;
     const { teacherId } = context.params.payload;

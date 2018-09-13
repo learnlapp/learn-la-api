@@ -17,8 +17,6 @@ module.exports = {
     find: [],
     get: [],
     create: [
-      ctx => console.log('data', ctx.data),
-
       iff(isProvider('external'), [
         iff(isNot(isPlatform('admin')), [disallow()]),
       ]),

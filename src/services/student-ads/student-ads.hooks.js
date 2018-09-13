@@ -20,10 +20,12 @@ const {
 const {
   // isAuthenticated,
   isPlatform,
+  isSettingOnline,
   refreshParamsEntity,
   setFastJoinQuery,
 } = require('../../hooks');
 
+const { chargeCoinsForSettingOnline } = require('./hooks/before');
 const resolvers = require('./resolvers');
 
 module.exports = {
@@ -60,7 +62,10 @@ module.exports = {
       iff(isProvider('external'), [
         iffElse(
           isPlatform('student'),
-          [restrictToOwner({ idField: '_id', ownerField: 'studentId' })],
+          [
+            restrictToOwner({ idField: '_id', ownerField: 'studentId' }),
+            iff(isSettingOnline(), [chargeCoinsForSettingOnline()]),
+          ],
           [disallow()]
         ),
       ]),

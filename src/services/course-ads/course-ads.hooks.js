@@ -25,7 +25,7 @@ const {
   setFastJoinQuery,
 } = require('../../hooks');
 
-const { chargeCoinsForSettingAdOnline } = require('./hooks/before');
+const { chargeCoinsForSettingOnline } = require('./hooks/before');
 const resolvers = require('./resolvers');
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
           isPlatform('teacher'),
           [
             associateCurrentUser({ idField: '_id', as: 'teacherId' }),
-            // iff(isSettingOnline(), [chargeCoinsForSettingAdOnline()]),
+            // iff(isSettingOnline(), [chargeCoinsForSettingOnline()]),
           ],
           [disallow()]
         ),
@@ -65,7 +65,7 @@ module.exports = {
           isPlatform('teacher'),
           [
             restrictToOwner({ idField: '_id', ownerField: 'teacherId' }),
-            iff(isSettingOnline(), [chargeCoinsForSettingAdOnline()]),
+            iff(isSettingOnline(), [chargeCoinsForSettingOnline()]),
           ],
           [disallow()]
         ),
