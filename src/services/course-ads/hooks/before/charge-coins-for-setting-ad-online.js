@@ -25,7 +25,7 @@ module.exports = function chargeCoinsForSettingAdsOnline() {
         throw new BadRequest('Not enough coins');
       }
 
-      await context.app.service('coin-transactions').create({
+      const res = await context.app.service('coin-transactions').create({
         method: 'out',
         type: 'post-course-ad',
         handledBy: 'system',

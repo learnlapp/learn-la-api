@@ -48,7 +48,10 @@ module.exports = {
         authenticate('jwt'),
         iffElse(
           isPlatform('teacher'),
-          [associateCurrentUser({ idField: '_id', as: 'teacherId' })],
+          [
+            associateCurrentUser({ idField: '_id', as: 'teacherId' }),
+            // iff(isSettingOnline(), [chargeCoinsForSettingAdOnline()]),
+          ],
           [disallow()]
         ),
       ]),
