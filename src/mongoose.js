@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 
-module.exports = function (app) {
-  mongoose.connect(app.get('mongodb'), { useNewUrlParser: true });
+module.exports = function(app) {
+  mongoose.set('useCreateIndex', true);
+  mongoose.set('debug', true);
+  mongoose.connect(
+    app.get('mongodb'),
+    {
+      useNewUrlParser: true,
+    }
+  );
   mongoose.Promise = global.Promise;
 
   app.set('mongooseClient', mongoose);

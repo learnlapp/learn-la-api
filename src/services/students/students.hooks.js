@@ -29,7 +29,7 @@ const { requestSMSVerifyCode, verificationApproval } = require('./hooks/after');
 
 module.exports = {
   before: {
-    all: [paramsFromClient('action')],
+    all: [paramsFromClient('action', 'subdocumentId')],
     find: [
       iff(isProvider('external'), [
         iff(isNot(isAction('phone-sign-up')), [
