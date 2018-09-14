@@ -15,13 +15,12 @@ const { setExpiredAfter, setFastJoinQuery } = require('../../hooks');
 
 const {
   associateRelevantIds,
-  chargeCoinsForMatching,
   hasEnoughCoins,
   isOwner,
   exchangePhoneCheck,
 } = require('./hooks/before');
 
-const { initLogMsg } = require('./hooks/after');
+const { chargeCoinsForMatching, initLogMsg } = require('./hooks/after');
 
 const resolvers = require('./resolvers');
 

@@ -2,17 +2,8 @@ const { BadRequest, GeneralError, NotFound } = require('@feathersjs/errors');
 
 module.exports = function chargeCoinsForSettingOnline() {
   return async context => {
-    // const { payload } = context.params;
+    const { payload } = context.params;
     const settings = context.app.get('appSettings')[payload.platform];
-
-    // const user = await context.app
-    //   .service(`${payload.platform}s`)
-    //   .get(payload[`${payload.platform}Id`]);
-    // console.log('user', user);
-
-    // if (!user) {
-    //   throw new NotFound(`${payload.platform} not found.`);
-    // }
 
     const { coinsPerMatching } = settings;
     const { coin, freeApplyQuotaLeft } = context.params.user;
@@ -34,7 +25,6 @@ module.exports = function chargeCoinsForSettingOnline() {
         .patch(payload[`${payload.platform}Id`], {
           $inc: { freeApplyQuotaLeft: -coinsPerMatching },
         });
-      console.log('a', a);
     } else {
       const transaction = await context.app
         .service('coin-transactions')
@@ -45,15 +35,11 @@ module.exports = function chargeCoinsForSettingOnline() {
           ownerType: payload.platform,
           ownerId: payload[`${payload.platform}Id`],
           description: `Charged ${coinsPerMatching} coins for a matching.`,
-          // ref: 'matchings',
-          // refId: context.id,
+          ref: 'matchings',
+          refId: context.result._id,
           amount: coinsPerMatching,
         });
-
-      context.params.transactionId = transaction._id;
     }
-    const transaction = await context.app;
-    console.log('b', transaction);
 
     return context;
   };
