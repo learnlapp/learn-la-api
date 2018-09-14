@@ -23,7 +23,7 @@ module.exports = {
       validate(),
     ],
     update: [disallow()],
-    patch: [disallow()],
+    patch: [iff(isProvider('external'), [disallow()])],
     remove: [disallow()],
   },
 

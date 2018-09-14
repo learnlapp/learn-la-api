@@ -15,6 +15,8 @@ const { setExpiredAfter, setFastJoinQuery } = require('../../hooks');
 
 const {
   associateRelevantIds,
+  chargeCoinsForMatching,
+  hasEnoughCoins,
   isOwner,
   exchangePhoneCheck,
 } = require('./hooks/before');
@@ -34,17 +36,13 @@ module.exports = {
     create: [
       disableMultiItemCreate(),
       associateRelevantIds(),
+      hasEnoughCoins(),
       setExpiredAfter(4, 'hour'),
     ],
     update: [disallow()],
     patch: [
       disableMultiItemChange(),
-      iff(isProvider('external'), [
-        c => console.log(c.data),
-
-        isOwner(),
-        exchangePhoneCheck(),
-      ]),
+      iff(isProvider('external'), [isOwner(), exchangePhoneCheck()]),
     ],
     remove: [disallow()],
   },
@@ -53,7 +51,11 @@ module.exports = {
     all: [],
     find: [fastJoin(resolvers, setFastJoinQuery())],
     get: [fastJoin(resolvers, setFastJoinQuery())],
-    create: [initLogMsg(), fastJoin(resolvers, setFastJoinQuery())],
+    create: [
+      chargeCoinsForMatching(),
+      initLogMsg(),
+      fastJoin(resolvers, setFastJoinQuery()),
+    ],
     update: [],
     patch: [fastJoin(resolvers, setFastJoinQuery())],
     remove: [],

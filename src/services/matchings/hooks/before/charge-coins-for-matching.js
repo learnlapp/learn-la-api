@@ -1,49 +1,60 @@
-// const { BadRequest, GeneralError } = require('@feathersjs/errors');
+const { BadRequest, GeneralError, NotFound } = require('@feathersjs/errors');
 
-// module.exports = function chargeCoinsForSettingOnline() {
-//   return async context => {
-//       const { payload } = context.params;
+module.exports = function chargeCoinsForSettingOnline() {
+  return async context => {
+    // const { payload } = context.params;
+    const settings = context.app.get('appSettings')[payload.platform];
 
-//       if (!payload || p)
-//     const studentSettings = context.app.get('appSettings').student;
-//     const { studentId } = context.params.payload;
+    // const user = await context.app
+    //   .service(`${payload.platform}s`)
+    //   .get(payload[`${payload.platform}Id`]);
+    // console.log('user', user);
 
-//     const [student, onlineAds] = await Promise.all([
-//       context.app.service('students').get(studentId),
-//       context.app.service('student-ads').find({
-//         query: {
-//           studentId,
-//           onlineAt: { $ne: null },
-//           removedAt: { $exists: false },
-//           expiredAt: { $exists: false },
-//           $limit: 0,
-//         },
-//       }),
-//     ]);
+    // if (!user) {
+    //   throw new NotFound(`${payload.platform} not found.`);
+    // }
 
-//     const { freeAdsQuota, coinsPerAdCreation } = studentSettings;
-//     if (!coinsPerAdCreation) {
-//       throw new GeneralError('coinsPerAdCreation could not be null or 0');
-//     }
+    const { coinsPerMatching } = settings;
+    const { coin, freeApplyQuotaLeft } = context.params.user;
 
-//     if (onlineAds.total >= freeAdsQuota / coinsPerAdCreation) {
-//       if (!student.coin || student.coin < coinsPerAdCreation) {
-//         throw new BadRequest('Not enough coins');
-//       }
+    if (!coinsPerMatching) {
+      throw new GeneralError('coinsPerMatching cannot be <= 0 or null.');
+    }
 
-//       await context.app.service('coin-transactions').create({
-//         method: 'out',
-//         type: 'post-student-ad',
-//         handledBy: 'system',
-//         ownerType: 'student',
-//         ownerId: studentId,
-//         description: `Charged ${coinsPerAdCreation} coins for posting an Ad.`,
-//         ref: 'student-ads',
-//         refId: context.id,
-//         amount: coinsPerAdCreation,
-//       });
-//     }
+    if (
+      (!freeApplyQuotaLeft && !coin) ||
+      (!freeApplyQuotaLeft && coin - coinsPerMatching < 0)
+    ) {
+      throw new BadRequest('Not enough coins');
+    }
 
-//     return context;
-//   };
-// };
+    if (freeApplyQuotaLeft - coinsPerMatching >= 0) {
+      const a = await context.app
+        .service(`${payload.platform}s`)
+        .patch(payload[`${payload.platform}Id`], {
+          $inc: { freeApplyQuotaLeft: -coinsPerMatching },
+        });
+      console.log('a', a);
+    } else {
+      const transaction = await context.app
+        .service('coin-transactions')
+        .create({
+          method: 'out',
+          type: 'create-matching',
+          handledBy: 'system',
+          ownerType: payload.platform,
+          ownerId: payload[`${payload.platform}Id`],
+          description: `Charged ${coinsPerMatching} coins for a matching.`,
+          // ref: 'matchings',
+          // refId: context.id,
+          amount: coinsPerMatching,
+        });
+
+      context.params.transactionId = transaction._id;
+    }
+    const transaction = await context.app;
+    console.log('b', transaction);
+
+    return context;
+  };
+};
