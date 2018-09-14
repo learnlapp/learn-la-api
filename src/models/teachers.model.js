@@ -50,7 +50,7 @@ module.exports = function(app) {
 
       bookmarks: { type: [Schema.Types.ObjectId] },
 
-      coin: { type: Number },
+      coin: { type: Number, default: 0 },
 
       extra: { type: Object },
       device: { type: Object },

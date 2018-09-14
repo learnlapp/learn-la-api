@@ -1,4 +1,4 @@
-const { BadRequest } = require('@feathersjs/errors');
+const { BadRequest, GeneralError } = require('@feathersjs/errors');
 
 module.exports = function chargeCoinsForSettingOnline() {
   return async context => {
@@ -19,9 +19,12 @@ module.exports = function chargeCoinsForSettingOnline() {
     ]);
 
     const { freeAdsQuota, coinsPerAdCreation } = teacherSettings;
+    if (!coinsPerAdCreation) {
+      throw new GeneralError('coinsPerAdCreation could not be null or 0');
+    }
 
     if (onlineAds.total >= freeAdsQuota / coinsPerAdCreation) {
-      if (teacher.coin < coinsPerAdCreation) {
+      if (!teacher.coin || teacher.coin < coinsPerAdCreation) {
         throw new BadRequest('Not enough coins');
       }
 
