@@ -21,6 +21,7 @@ const { restrictToOwner } = require('feathers-authentication-hooks');
 const { isAction, isPlatform } = require('../../hooks');
 const {
   constructPhone,
+  initTeacherDefaultValues,
   isNewUser,
   processDataFromFacebook,
   verifyOneTimeToken,
@@ -62,6 +63,7 @@ module.exports = {
         [processDataFromFacebook()],
         [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
       ),
+      initTeacherDefaultValues(),
     ],
     update: [disallow()],
     patch: [

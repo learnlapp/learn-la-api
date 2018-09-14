@@ -19,7 +19,7 @@ const resolvers = {
 
       if (
         payload &&
-        payload.platform === 'student' &&
+        payload.platform === 'teacher' &&
         user &&
         user.bookmarks &&
         user.bookmarks.filter(id => studentAd._id.equals(id)).length
