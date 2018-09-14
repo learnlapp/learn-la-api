@@ -9,7 +9,7 @@ module.exports = function processDataFromFacebook() {
       name,
       gender: gender ? gender.toLowerCase() : undefined,
       birthday: birthday ? birthday : undefined,
-      avatar: picture && picture.data ? picture.data.url : undefined,
+      // avatar: picture && picture.data ? picture.data.url : undefined,
     };
 
     context.data = data;
