@@ -98,6 +98,14 @@ module.exports = function(app) {
   // ======
   // Publish Events
   // ======
+  app.service('students').publish('patched', (data, context) => {
+    return app.channel(`student/${data._id}`);
+  });
+
+  app.service('teachers').publish('patched', (data, context) => {
+    return app.channel(`teacher/${data._id}`);
+  });
+
   app.service('matchings').publish('patched', (data, context) => {
     return [
       app.channel(`student/${data.studentId}`),
