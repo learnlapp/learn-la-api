@@ -8,6 +8,7 @@ const {
   disableMultiItemChange,
   disableMultiItemCreate,
   disallow,
+  every,
   iff,
   iffElse,
   isNot,
@@ -15,6 +16,8 @@ const {
   keep,
   paramsFromClient,
   preventChanges,
+  some,
+  when,
 } = require('feathers-hooks-common');
 const { restrictToOwner } = require('feathers-authentication-hooks');
 
@@ -40,9 +43,13 @@ module.exports = {
       iff(isProvider('external'), [
         iff(isNot(isAction('phone-sign-up')), [
           authenticate('jwt'),
-          iff(ctx => !isPlatform('teacher')(ctx) && !isPlatform('admin')(ctx), [
-            disallow(),
-          ]),
+          when(
+            every(isNot(isPlatform('teacher')), isNot(isPlatform('admin'))),
+            [disallow()]
+          ),
+          // iff(ctx => !isPlatform('teacher')(ctx) && !isPlatform('admin')(ctx), [
+          //   disallow(),
+          // ]),
         ]),
       ]),
     ],
@@ -78,12 +85,19 @@ module.exports = {
           ],
           [
             authenticate('jwt'),
-            iff(
-              ctx =>
-                isAction('course-approval')(ctx) ||
-                isAction('verification-approval')(ctx),
+            when(
+              some(
+                isAction('course-approval'),
+                isAction('verification-approval')
+              ),
               [iff(isNot(isPlatform('admin')), [disallow()])]
             ),
+            // iff(
+            //   ctx =>
+            //     isAction('course-approval')(ctx) ||
+            //     isAction('verification-approval')(ctx),
+            //   [iff(isNot(isPlatform('admin')), [disallow()])]
+            // ),
             iffElse(
               isPlatform('teacher'),
               [

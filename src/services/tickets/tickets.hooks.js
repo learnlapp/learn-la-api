@@ -9,6 +9,7 @@ const {
   isNot,
   isProvider,
   preventChanges,
+  some,
 } = require('feathers-hooks-common');
 const { associateCurrentUser } = require('feathers-authentication-hooks');
 
@@ -30,7 +31,8 @@ module.exports = {
     create: [
       disableMultiItemCreate(),
       iffElse(
-        ctx => isPlatform('student')(ctx) || isPlatform('teacher')(ctx),
+        some(isPlatform('student'), isPlatform('teacher')),
+        // ctx => isPlatform('student')(ctx) || isPlatform('teacher')(ctx),
         [
           associateCurrentUser({ idField: '_id', as: 'ownerId' }),
           setTicketPlatform(),
@@ -42,7 +44,8 @@ module.exports = {
     patch: [
       disableMultiItemChange(),
       iffElse(
-        ctx => isPlatform('student')(ctx) || isPlatform('teacher')(ctx),
+        some(isPlatform('student'), isPlatform('teacher')),
+        // ctx => isPlatform('student')(ctx) || isPlatform('teacher')(ctx),
         [_restrictToOwner({ ownerField: 'ownerId' })],
         [iff(isNot(isPlatform('admin')), [disallow()])]
       ),

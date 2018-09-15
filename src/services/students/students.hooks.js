@@ -8,6 +8,7 @@ const {
   disableMultiItemChange,
   disableMultiItemCreate,
   disallow,
+  every,
   iff,
   iffElse,
   isNot,
@@ -15,6 +16,7 @@ const {
   keep,
   paramsFromClient,
   preventChanges,
+  when,
 } = require('feathers-hooks-common');
 const { restrictToOwner } = require('feathers-authentication-hooks');
 
@@ -39,9 +41,13 @@ module.exports = {
       iff(isProvider('external'), [
         iff(isNot(isAction('phone-sign-up')), [
           authenticate('jwt'),
-          iff(ctx => !isPlatform('student')(ctx) && !isPlatform('admin')(ctx), [
-            disallow(),
-          ]),
+          when(
+            every(isNot(isPlatform('student')), isNot(isPlatform('admin'))),
+            [disallow()]
+          ),
+          // iff(ctx => !isPlatform('student')(ctx) && !isPlatform('admin')(ctx), [
+          //   disallow(),
+          // ]),
         ]),
       ]),
     ],
