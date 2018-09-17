@@ -1,7 +1,7 @@
 module.exports = function initTeacherQuota() {
   return async context => {
     const studentSettings = context.app.get('appSettings').student;
-    const { freeApplyQuota } = studentSettings;
+    const freeApplyQuota = studentSettings.coin.free.matching;
 
     await context.app.service('students').patch(context.id, {
       freeApplyQuotaLeft: freeApplyQuota,

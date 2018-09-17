@@ -1,21 +1,21 @@
-module.exports = function giveStudentWelcomeCoins() {
+module.exports = function giveCoinsForStudentProfileCompletion() {
   return async context => {
     const studentSettings = context.app.get('appSettings').student;
-    const { welcomeCoin } = studentSettings;
+    const { profileCompletion } = studentSettings.coin.free;
 
     await context.app.service('coin-transactions').create({
       method: 'in',
-      type: 'welcome-coins',
+      type: 'profile-completion',
       handledBy: 'system',
       ownerType: 'student',
       ownerId: context.result._id,
-      description: `Free ${welcomeCoin} coins for completing profile.`,
-      amount: welcomeCoin,
+      description: `Free ${profileCompletion} coins for completing profile.`,
+      amount: profileCompletion,
     });
 
     context.dispatch = {
       ...context.dispatch,
-      coin: welcomeCoin,
+      coin: profileCompletion,
     };
 
     return context;

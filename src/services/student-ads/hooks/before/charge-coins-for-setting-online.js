@@ -18,26 +18,28 @@ module.exports = function chargeCoinsForSettingOnline() {
       }),
     ]);
 
-    const { freeAdsQuota, coinsPerAdCreation } = studentSettings;
-    if (!coinsPerAdCreation) {
-      throw new GeneralError('coinsPerAdCreation could not be null or 0');
+    const freeAdsQuota = studentSettings.coin.free.launchAd;
+    const coinsForLaunchingAd = studentSettings.coin.pricing.launchAd;
+
+    if (!coinsForLaunchingAd) {
+      throw new GeneralError('coinsForLaunchingAd could not be null or 0');
     }
 
-    if (onlineAds.total >= freeAdsQuota / coinsPerAdCreation) {
-      if (!student.coin || student.coin < coinsPerAdCreation) {
+    if (onlineAds.total >= freeAdsQuota / coinsForLaunchingAd) {
+      if (!student.coin || student.coin < coinsForLaunchingAd) {
         throw new BadRequest('Not enough coins');
       }
 
       await context.app.service('coin-transactions').create({
         method: 'out',
-        type: 'post-student-ad',
+        type: 'launch-ad',
         handledBy: 'system',
         ownerType: 'student',
         ownerId: studentId,
-        description: `Charged ${coinsPerAdCreation} coins for posting an Ad.`,
+        description: `Charged ${coinsForLaunchingAd} coins for posting an Ad.`,
         ref: 'student-ads',
         refId: context.id,
-        amount: coinsPerAdCreation,
+        amount: coinsForLaunchingAd,
       });
     }
 

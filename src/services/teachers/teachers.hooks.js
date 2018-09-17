@@ -30,7 +30,7 @@ const {
 } = require('./hooks/before');
 const {
   courseApproval,
-  giveTeacherWelcomeCoinss,
+  giveCoinsForTeacherProfileCompletion,
   initTeacherDefaultValues,
   requestSMSVerifyCode,
   verificationApproval,
@@ -137,7 +137,7 @@ module.exports = {
     patch: [
       iff(isAction('set-profile-complete'), [
         initTeacherDefaultValues(),
-        giveTeacherWelcomeCoinss(),
+        giveCoinsForTeacherProfileCompletion(),
       ]),
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('course-approval'), [courseApproval()]),

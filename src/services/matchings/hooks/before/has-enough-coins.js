@@ -13,7 +13,7 @@ module.exports = function chargeCoinsForSettingOnline() {
       throw new NotFound(`${payload.platform} not found.`);
     }
 
-    const { coinsPerMatching } = settings;
+    const coinsPerMatching = settings.coin.pricing.matching;
     const { coin, freeApplyQuotaLeft } = user;
 
     if (!coinsPerMatching) {

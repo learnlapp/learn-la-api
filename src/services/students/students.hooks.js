@@ -28,7 +28,7 @@ const {
   verifyOneTimeToken,
 } = require('./hooks/before');
 const {
-  giveStudentWelcomeCoins,
+  giveCoinsForStudentProfileCompletion,
   initStudentDefaultValues,
   requestSMSVerifyCode,
   verificationApproval,
@@ -125,7 +125,7 @@ module.exports = {
     patch: [
       iff(isAction('set-profile-complete'), [
         initStudentDefaultValues(),
-        giveStudentWelcomeCoins(),
+        giveCoinsForStudentProfileCompletion(),
       ]),
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('verification-approval'), [verificationApproval()]),

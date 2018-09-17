@@ -5,7 +5,7 @@ module.exports = function chargeCoinsForSettingOnline() {
     const { payload } = context.params;
     const settings = context.app.get('appSettings')[payload.platform];
 
-    const { coinsPerMatching } = settings;
+    const coinsPerMatching = settings.coin.pricing.matching;
     const { coin, freeApplyQuotaLeft } = context.params.user;
 
     if (!coinsPerMatching) {
