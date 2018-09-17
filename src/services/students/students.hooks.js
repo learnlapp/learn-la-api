@@ -23,13 +23,13 @@ const { restrictToOwner } = require('feathers-authentication-hooks');
 const { isAction, isPlatform } = require('../../hooks');
 const {
   constructPhone,
-  initStudentDefaultValues,
   isNewUser,
   processDataFromFacebook,
   verifyOneTimeToken,
 } = require('./hooks/before');
 const {
   giveStudentWelcomeCoins,
+  initStudentDefaultValues,
   requestSMSVerifyCode,
   verificationApproval,
 } = require('./hooks/after');
@@ -68,7 +68,6 @@ module.exports = {
         [processDataFromFacebook()],
         [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
       ),
-      initStudentDefaultValues(),
     ],
     update: [disallow()],
     patch: [
@@ -121,9 +120,13 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [giveStudentWelcomeCoins()],
+    create: [],
     update: [],
     patch: [
+      iff(isAction('set-profile-complete'), [
+        initStudentDefaultValues(),
+        giveStudentWelcomeCoins(),
+      ]),
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('verification-approval'), [verificationApproval()]),
     ],
