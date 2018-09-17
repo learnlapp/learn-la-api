@@ -29,8 +29,8 @@ module.exports = function(app) {
           matching: { type: Number, default: 10 },
         },
         reward: {
-          giveFeedback: { type: Number, default: 10 },
-          reportBug: { type: Number, default: 10 },
+          feedback: { type: Number, default: 10 },
+          reportError: { type: Number, default: 10 },
         },
       },
       version: {

@@ -8,24 +8,32 @@ const {
   iffElse,
   isNot,
   isProvider,
+  paramsFromClient,
   preventChanges,
   some,
+  when,
 } = require('feathers-hooks-common');
 const { associateCurrentUser } = require('feathers-authentication-hooks');
 
 const {
   _restrictToOwner,
+  isAction,
   isPlatform,
   setFastJoinQuery,
 } = require('../../hooks');
 
 const { setTicketPlatform } = require('./hooks/before');
-
+const { giveCoinsReward } = require('./hooks/after');
 const resolvers = require('./resolvers');
 
 module.exports = {
   before: {
-    all: [iff(isProvider('external'), [authenticate('jwt')])],
+    all: [
+      iff(isProvider('external'), [
+        authenticate('jwt'),
+        paramsFromClient('action'),
+      ]),
+    ],
     find: [],
     get: [],
     create: [
@@ -58,7 +66,7 @@ module.exports = {
     all: [iff(isPlatform('admin'), [fastJoin(resolvers, setFastJoinQuery())])],
     find: [],
     get: [],
-    create: [],
+    create: [when(isAction('reward'), giveCoinsReward())],
     update: [],
     patch: [],
     remove: [],
