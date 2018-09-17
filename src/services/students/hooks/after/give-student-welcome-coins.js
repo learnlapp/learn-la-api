@@ -1,5 +1,3 @@
-const { NotFound } = require('@feathersjs/errors');
-
 module.exports = function giveStudentWelcomeCoins() {
   return async context => {
     const studentSettings = context.app.get('appSettings').student;

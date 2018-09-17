@@ -24,7 +24,6 @@ const { restrictToOwner } = require('feathers-authentication-hooks');
 const { isAction, isPlatform } = require('../../hooks');
 const {
   constructPhone,
-  initTeacherDefaultValues,
   isNewUser,
   processDataFromFacebook,
   verifyOneTimeToken,
@@ -32,6 +31,7 @@ const {
 const {
   courseApproval,
   giveTeacherWelcomeCoinss,
+  initTeacherDefaultValues,
   requestSMSVerifyCode,
   verificationApproval,
 } = require('./hooks/after');
@@ -70,7 +70,6 @@ module.exports = {
         [processDataFromFacebook()],
         [constructPhone(), isNewUser(), verifyOneTimeToken(), hashPassword()]
       ),
-      initTeacherDefaultValues(),
     ],
     update: [disallow()],
     patch: [
@@ -133,9 +132,13 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [giveTeacherWelcomeCoinss()],
+    create: [],
     update: [],
     patch: [
+      iff(isAction('set-profile-complete'), [
+        initTeacherDefaultValues(),
+        giveTeacherWelcomeCoinss(),
+      ]),
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('course-approval'), [courseApproval()]),
       iff(isAction('verification-approval'), [verificationApproval()]),

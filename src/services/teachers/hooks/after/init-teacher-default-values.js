@@ -5,7 +5,15 @@ module.exports = function initTeacherQuota() {
     const teacherSettings = context.app.get('appSettings').teacher;
     const { freeApplyQuota } = teacherSettings;
 
-    context.data = { ...context.data, freeApplyQuotaLeft: freeApplyQuota };
+    await context.app.service('teachers').patch(context.id, {
+      freeApplyQuotaLeft: freeApplyQuota,
+    });
+
+    context.dispatch = {
+      ...context.dispatch,
+      freeApplyQuotaLeft: freeApplyQuota,
+    };
+
     return context;
   };
 };
