@@ -21,8 +21,6 @@ module.exports = function _restrict(options = {}) {
     const record = await context.app
       .service(context.path)
       .get(context.id, { fastJoinQuery: { owner: false } });
-    console.log('record', record);
-    console.log('pay', payload[`${payload.platform}Id`]);
 
     if (!record) {
       throw new NotFound();

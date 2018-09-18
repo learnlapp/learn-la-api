@@ -11,10 +11,16 @@ const {
   some,
   preventChanges,
 } = require('feathers-hooks-common');
-const { restrictToOwner } = require('feathers-authentication-hooks');
+// const { restrictToOwner } = require('feathers-authentication-hooks');
 
-const { _queryWithCurrentUser, isPlatform } = require('../../hooks');
-const { giveExtra } = require('./hooks/after');
+const {
+  _queryWithCurrentUser,
+  isAction,
+  _restrictToOwner,
+  isPlatform,
+} = require('../../hooks');
+const { proceedRedeem } = require('./hooks/before');
+const { giveExtra, finishRedeem } = require('./hooks/after');
 
 module.exports = {
   before: {
@@ -37,7 +43,7 @@ module.exports = {
       iff(isProvider('external'), [
         iffElse(
           some(isPlatform('student'), isPlatform('teacher')),
-          [restrictToOwner({ idField: '_id', ownerField: 'ownerId' })],
+          [_restrictToOwner({ ownerField: 'ownerId' })],
           [iff(isNot(isPlatform('admin')), [disallow()])]
         ),
       ]),
@@ -47,7 +53,26 @@ module.exports = {
       iff(isProvider('external'), [disallow()]),
     ],
     update: [disallow()],
-    patch: [disableMultiItemChange()],
+    patch: [
+      disableMultiItemChange(),
+      iff(isProvider('external'), [
+        iffElse(
+          some(isPlatform('student'), isPlatform('teacher')),
+          [
+            iff(isAction('redeem'), proceedRedeem()),
+            preventChanges(
+              false,
+              'category',
+              'type',
+              'ownerId',
+              'ownerType',
+              'coin'
+            ),
+          ],
+          [iff(isNot(isPlatform('admin')), [disallow()])]
+        ),
+      ]),
+    ],
     remove: [disallow()],
   },
 
@@ -57,7 +82,7 @@ module.exports = {
     get: [],
     create: [giveExtra()],
     update: [],
-    patch: [],
+    patch: [iff(isAction('redeemed'), finishRedeem())],
     remove: [],
   },
 
