@@ -35,6 +35,10 @@ module.exports = function giveCoinsReward() {
       amount: reward[type],
     });
 
+    context.app.service(`${platform}s`).patch(ownerId, {
+      [`extra.${type}`]: 1,
+    });
+
     return context;
   };
 };
