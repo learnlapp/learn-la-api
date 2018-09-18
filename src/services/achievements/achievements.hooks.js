@@ -13,7 +13,7 @@ const {
 } = require('feathers-hooks-common');
 const { restrictToOwner } = require('feathers-authentication-hooks');
 
-const { isPlatform } = require('../../hooks');
+const { _queryWithCurrentUser, isPlatform } = require('../../hooks');
 
 module.exports = {
   before: {
@@ -24,17 +24,17 @@ module.exports = {
       ]),
     ],
     find: [
-      iffElse(isProvider('external'), [
-        iff(
+      iff(isProvider('external'), [
+        iffElse(
           some(isPlatform('student'), isPlatform('teacher')),
-          [restrictToOwner({ idField: '_id', ownerField: 'ownerId' })],
+          [_queryWithCurrentUser()],
           [iff(isNot(isPlatform('admin')), [disallow()])]
         ),
       ]),
     ],
     get: [
-      iffElse(isProvider('external'), [
-        iff(
+      iff(isProvider('external'), [
+        iffElse(
           some(isPlatform('student'), isPlatform('teacher')),
           [restrictToOwner({ idField: '_id', ownerField: 'ownerId' })],
           [iff(isNot(isPlatform('admin')), [disallow()])]
