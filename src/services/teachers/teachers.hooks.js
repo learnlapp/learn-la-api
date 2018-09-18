@@ -30,7 +30,7 @@ const {
 } = require('./hooks/before');
 const {
   courseApproval,
-  createAchievementForPhoneAssoicated,
+  createAchievementForPhoneAssociated,
   giveCoinsForTeacherProfileCompletion,
   initTeacherDefaultValues,
   requestSMSVerifyCode,
@@ -135,7 +135,7 @@ module.exports = {
     get: [],
     create: [
       iff(isNot(isAction('facebook-sign-up')), [
-        createAchievementForPhoneAssoicated(),
+        createAchievementForPhoneAssociated(),
       ]),
     ],
     update: [],
@@ -147,7 +147,7 @@ module.exports = {
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('course-approval'), [courseApproval()]),
       iff(isAction('verification-approval'), [verificationApproval()]),
-      iff(isAction('associate-phone'), [createAchievementForPhoneAssoicated()]),
+      iff(isAction('associate-phone'), [createAchievementForPhoneAssociated()]),
     ],
     remove: [],
   },

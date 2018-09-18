@@ -30,9 +30,7 @@ module.exports = function verificationAprroval() {
           ownerId: _id,
           coin: achievement.verification[type],
         });
-
         // send notification to teacher
-        // console.log('result', context.result);
 
         // notify student if she requested
         const matchings = await context.app.service('matchings').find({

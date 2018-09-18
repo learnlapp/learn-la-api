@@ -14,6 +14,7 @@ const {
 const { restrictToOwner } = require('feathers-authentication-hooks');
 
 const { _queryWithCurrentUser, isPlatform } = require('../../hooks');
+const { giveExtra } = require('./hooks/after');
 
 module.exports = {
   before: {
@@ -54,7 +55,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [giveExtra()],
     update: [],
     patch: [],
     remove: [],

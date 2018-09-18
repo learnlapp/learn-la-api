@@ -16,6 +16,7 @@ const {
   keep,
   paramsFromClient,
   preventChanges,
+  some,
   when,
 } = require('feathers-hooks-common');
 const { restrictToOwner } = require('feathers-authentication-hooks');
@@ -28,6 +29,7 @@ const {
   verifyOneTimeToken,
 } = require('./hooks/before');
 const {
+  createAchievementForPhoneAssociated,
   giveCoinsForStudentProfileCompletion,
   initStudentDefaultValues,
   requestSMSVerifyCode,
@@ -90,7 +92,7 @@ module.exports = {
               [
                 restrictToOwner({ idField: '_id', ownerField: '_id' }),
                 iffElse(
-                  isAction('update-phone'),
+                  some(isAction('update-phone'), isAction('associate-phone')),
                   [constructPhone(), verifyOneTimeToken()],
                   [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
                 ),
@@ -120,7 +122,11 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [],
+    create: [
+      iff(isNot(isAction('facebook-sign-up')), [
+        createAchievementForPhoneAssociated(),
+      ]),
+    ],
     update: [],
     patch: [
       iff(isAction('set-profile-complete'), [
@@ -129,6 +135,7 @@ module.exports = {
       ]),
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('verification-approval'), [verificationApproval()]),
+      iff(isAction('associate-phone'), [createAchievementForPhoneAssociated()]),
     ],
     remove: [],
   },
