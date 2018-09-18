@@ -30,6 +30,7 @@ const {
 } = require('./hooks/before');
 const {
   courseApproval,
+  createAchievementForPhoneAssoicated,
   giveCoinsForTeacherProfileCompletion,
   initTeacherDefaultValues,
   requestSMSVerifyCode,
@@ -84,7 +85,7 @@ module.exports = {
           ],
           [
             authenticate('jwt'),
-            when(
+            iff(
               some(
                 isAction('course-approval'),
                 isAction('verification-approval')
@@ -102,7 +103,7 @@ module.exports = {
               [
                 restrictToOwner({ idField: '_id', ownerField: '_id' }),
                 iffElse(
-                  isAction('update-phone'),
+                  some(isAction('update-phone'), isAction('associate-phone')),
                   [constructPhone(), verifyOneTimeToken()],
                   [preventChanges(false, 'phone', 'phoneNumber', 'countryCode')]
                 ),
@@ -132,7 +133,11 @@ module.exports = {
       ]),
     ],
     get: [],
-    create: [],
+    create: [
+      iff(isNot(isAction('facebook-sign-up')), [
+        createAchievementForPhoneAssoicated(),
+      ]),
+    ],
     update: [],
     patch: [
       iff(isAction('set-profile-complete'), [
@@ -142,6 +147,7 @@ module.exports = {
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('course-approval'), [courseApproval()]),
       iff(isAction('verification-approval'), [verificationApproval()]),
+      iff(isAction('associate-phone'), [createAchievementForPhoneAssoicated()]),
     ],
     remove: [],
   },

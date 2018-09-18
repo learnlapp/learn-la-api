@@ -116,4 +116,8 @@ module.exports = function(app) {
   app.service('matching-logs').publish('created', (data, context) => {
     return [app.channel(`matching/${data.matchingId}/${data.to}`)];
   });
+
+  app.service('achievements').publish('created', (data, context) => {
+    return app.channel(`${data.ownerType}/${data.ownerId}`);
+  });
 };
