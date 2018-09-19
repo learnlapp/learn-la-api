@@ -5,7 +5,7 @@ module.exports = function giveExtra() {
     const { extra } = settings.achievement[category];
 
     const achievements = await context.app.service('achievements').find({
-      query: { category, ownerType, ownerId },
+      query: { category, ownerType, ownerId, $sort: { createdAt: -1 } },
       paginate: false,
     });
 

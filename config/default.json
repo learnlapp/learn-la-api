@@ -10,6 +10,16 @@
     "appId": "TWILLIO_APP_ID=",
     "apiKey": "TWILLIO_API_KEY"
   },
+  "oneSignal": {
+    "student": {
+      "appId": "ONESIGNAL_APP_ID_STUDENT",
+      "secret": "ONESIGNAL_APP_SECRET_TEACHER"
+    },
+    "teacher": {
+      "appId": "ONESIGNAL_APP_ID_TEACHER",
+      "secret": "ONESIGNAL_APP_SECRET_STUDENT"
+    }
+  },
   "mongodb": "mongodb://localhost:27017/learn_la",
   "authentication": {
     "secret": "349a17df509fc654c13050124ccd166d2936c02946419ce6f1c32ca4a5ce7566388959ac6697eae91fbf8babd3c5003a00fc8d0509ef77a2084a7ead4bce3baa81cfa0bfad98812a4957641556423e232617d15cec00732136ff3cbbc2f78cfc6b15723d6a317aeee6adaae43eaf6740092ca6d115e209872783eb9c2584cf829014d59a32396acc4ef9e87877614e6062caf3b6e10d6f64f5a8dac1b2e71f085ff81d39497b73ed0413e016eca722b5f32106a6e1af83cce7c6465a2f7b8f82c2086f64f9f069d8f0ddc1501fe8a7a76a6c706322ea6efe2e6f13068b44c6520c9a4b96a354758f55860b944d143f806b71216e0f9f8f6bf52764ac584a60ef",
