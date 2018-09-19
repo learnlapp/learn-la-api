@@ -2,6 +2,8 @@ const { BadRequest, GeneralError } = require('@feathersjs/errors');
 
 module.exports = function courseApproval() {
   return async context => {
+    const teacherSettings = context.app.get('appSettings').teacher;
+    const { achievement } = teacherSettings;
     const { subdocumentId } = context.params;
     const { _id, courses } = context.result;
 
@@ -20,8 +22,14 @@ module.exports = function courseApproval() {
       case 'approved':
         // save archievement,
 
+        context.app.service('achievements').create({
+          category: 'verification',
+          type: 'course',
+          ownerType: 'teacher',
+          ownerId: _id,
+          coin: achievement.verification.course,
+        });
         // send notification to teacher
-        // console.log('result', context.result);
 
         // notify student if she requested
         const matchings = await context.app.service('matchings').find({
