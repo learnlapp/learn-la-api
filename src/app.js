@@ -18,6 +18,7 @@ const channels = require('./channels');
 const mongoose = require('./mongoose');
 const authentication = require('./authentication');
 const twillio = require('./twillio');
+const oneSignal = require('./oneSignal');
 const globalVars = require('./globalVars');
 
 const verifyPhone = require('./twillio/verify-phone');
@@ -42,6 +43,7 @@ app.configure(socketio());
 
 app.configure(mongoose);
 app.configure(twillio);
+app.configure(oneSignal);
 
 // Configure other middleware (see `middleware/index.js`)
 app.configure(middleware);
@@ -54,6 +56,7 @@ app.configure(channels);
 // additional routes
 app.configure(verifyPhone);
 app.configure(globalVars());
+
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
 app.use(express.errorHandler({ logger }));
