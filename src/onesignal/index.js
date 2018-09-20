@@ -12,6 +12,30 @@ const headers = {
   Authorization: `Basic ${ONESIGNAL.KEY}`,
 };
 
+const send => (params = {})  => (config) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: `Basic ${config.apiKey}`,
+  };
+
+  return axios({
+    method: 'POST',
+    url: 'https://onesignal.com/api/v1/notifications',
+    headers,
+    data: {
+      app_id: ONESIGNAL.APP_ID,
+      data,
+      headings,
+      contents,
+      content_available: true,
+      mutable_content: true,
+      include_player_ids: [target],
+      ios_badgeType: 'Increase',
+      ios_badgeCount: 1,
+    },
+  });
+}
+
 function send(target = null, contents, headings = null, data = {}) {
   return axios({
     method: 'POST',

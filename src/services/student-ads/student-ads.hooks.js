@@ -39,11 +39,12 @@ module.exports = {
     find: [],
     get: [
       iff(isProvider('external'), [
-        iffElse(
-          isPlatform('student'),
-          [restrictToOwner({ idField: '_id', ownerField: 'studentId' })],
-          [disallow()]
-        ),
+        authenticate('jwt'),
+        // iffElse(
+        //   isPlatform('student'),
+        //   [restrictToOwner({ idField: '_id', ownerField: 'studentId' })],
+        //   [disallow()]
+        // ),
       ]),
     ],
     create: [

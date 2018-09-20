@@ -33,14 +33,14 @@ module.exports = {
     all: [paramsFromClient('action')],
     find: [],
     get: [
-      iff(isProvider('external'), [
-        authenticate('jwt'),
-        iffElse(
-          isPlatform('teacher'),
-          [restrictToOwner({ idField: '_id', ownerField: 'teacherId' })],
-          [disallow()]
-        ),
-      ]),
+      // iff(isProvider('external'), [
+      //   authenticate('jwt'),
+      //   iffElse(
+      //     isPlatform('teacher'),
+      //     [restrictToOwner({ idField: '_id', ownerField: 'teacherId' })],
+      //     [disallow()]
+      //   ),
+      // ]),
     ],
     create: [
       disableMultiItemCreate(),
