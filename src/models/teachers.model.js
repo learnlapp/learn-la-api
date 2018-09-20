@@ -15,6 +15,7 @@ module.exports = function(app) {
       phoneNumber: { type: String },
       countryCode: { type: String },
       password: { type: String },
+      oneSignalIds: { type: [String] },
 
       name: { type: String },
       avatar: { type: String },

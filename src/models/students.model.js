@@ -14,8 +14,8 @@ module.exports = function(app) {
       phone: { type: String, unique: true, sparse: true },
       phoneNumber: { type: String },
       countryCode: { type: String },
-
       password: { type: String },
+      oneSignalIds: { type: [String] },
 
       name: { type: String, requiredd: true },
       avatar: { type: String },
