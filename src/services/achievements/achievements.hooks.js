@@ -20,7 +20,7 @@ const {
   isPlatform,
 } = require('../../hooks');
 const { proceedRedeem } = require('./hooks/before');
-const { giveExtra, finishRedeem } = require('./hooks/after');
+const { finishRedeem, giveExtra, notifyUser } = require('./hooks/after');
 
 module.exports = {
   before: {
@@ -80,7 +80,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [giveExtra()],
+    create: [notifyUser(), giveExtra()],
     update: [],
     patch: [iff(isAction('redeemed'), finishRedeem())],
     remove: [],

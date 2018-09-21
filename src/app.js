@@ -22,6 +22,7 @@ const oneSignal = require('./oneSignal');
 const globalVars = require('./globalVars');
 
 const verifyPhone = require('./twillio/verify-phone');
+const oneSignal_test = require('./oneSignal/oneSignal_test');
 
 const app = express(feathers());
 
@@ -56,6 +57,7 @@ app.configure(channels);
 // additional routes
 app.configure(verifyPhone);
 app.configure(globalVars());
+app.configure(oneSignal_test);
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());
