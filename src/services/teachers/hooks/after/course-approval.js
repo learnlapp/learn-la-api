@@ -16,29 +16,37 @@ module.exports = function courseApproval() {
     const course = courses.filter(doc => doc._id.equals(subdocumentId))[0];
     const { status, category, title, level } = course;
     const config = context.app.get('oneSignal').teacher;
+    const m_verificationType = category + title + level;
+    const message = messageList.teacher.verification;
 
     switch (status) {
       case 'rejected':
         // send notification
-        const m_verificationType = category + title + level;
-        const {
-          headings,
-          contents,
-          data,
-        } = messageList.teacher.verification.rejected;
-
         sendNotification({
           config,
           targetIds: oneSignalIds,
-          headings: JSON.parse(eval(headings)),
-          contents: JSON.parse(eval(contents)),
-          data: { ...data, id: matchingId },
+          headings: JSON.parse(eval(message.rejected.headings)),
+          contents: JSON.parse(eval(message.rejected.contents)),
+          data: {
+            ...message.rejected.data,
+            route: 'ProfileQualificationsScreen',
+          },
         });
         break;
 
       case 'approved':
+        // send notification
+        sendNotification({
+          config,
+          targetIds: oneSignalIds,
+          headings: JSON.parse(eval(message.approved.headings)),
+          contents: JSON.parse(eval(message.approved.contents)),
+          data: {
+            ...message.approved.data,
+            route: 'ProfileQualificationsScreen',
+          },
+        });
         // save archievement,
-
         context.app.service('achievements').create({
           category: 'verification',
           type: 'course',
@@ -46,7 +54,6 @@ module.exports = function courseApproval() {
           ownerId: _id,
           coin: achievement.verification.course,
         });
-        // send notification to teacher
 
         // notify student if she requested
         const matchings = await context.app.service('matchings').find({

@@ -3,7 +3,7 @@ const messageList = require('../../../../modules/notification-messages');
 
 module.exports = function sendPushNotification() {
   return async context => {
-    const { logId, matching, matchingId, to } = context.result;
+    const { logId, matching, matchingId, from, to } = context.result;
 
     if (!matching) {
       console.error(
@@ -13,8 +13,8 @@ module.exports = function sendPushNotification() {
     }
 
     const config = context.app.get('oneSignal')[to];
-    const { name, oneSignalIds } = matching[to];
-    const m_username = name;
+    const { oneSignalIds } = matching[to];
+    const m_from = matching[from].name;
 
     const { headings, contents, data } = messageList[to].matchingLog[logId];
     sendNotification({

@@ -18,27 +18,31 @@ module.exports = function verificationAprroval() {
     )[0];
     const { status, type } = verification;
     const config = context.app.get('oneSignal').student;
+    const m_verificationType = type;
+    const message = messageList.student.verification;
 
     switch (status) {
       case 'rejected':
         // send notification
-        const m_verificationType = type;
-        const {
-          headings,
-          contents,
-          data,
-        } = messageList.student.verification.rejected;
-
         sendNotification({
           config,
           targetIds: oneSignalIds,
-          headings: JSON.parse(eval(headings)),
-          contents: JSON.parse(eval(contents)),
-          data: { ...data, id: matchingId },
+          headings: JSON.parse(eval(message.rejected.headings)),
+          contents: JSON.parse(eval(message.rejected.contents)),
+          data: { ...message.rejected.data },
         });
         break;
 
       case 'approved':
+        // send notification to teacher
+        sendNotification({
+          config,
+          targetIds: oneSignalIds,
+          headings: JSON.parse(eval(message.approved.headings)),
+          contents: JSON.parse(eval(message.approved.contents)),
+          data: { ...message.approved.data },
+        });
+
         // save archievement,
         context.app.service('achievements').create({
           category: 'verification',
@@ -47,8 +51,6 @@ module.exports = function verificationAprroval() {
           ownerId: _id,
           coin: achievement.verification[type],
         });
-        // send notification to teacher
-        // console.log('result', context.result);
 
         // notify student if she requested
         const matchings = await context.app.service('matchings').find({
