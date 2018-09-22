@@ -1,11 +1,13 @@
 const { BadRequest, GeneralError } = require('@feathersjs/errors');
+const { sendNotification } = require('../../../../modules/oneSignal');
+const messageList = require('../../../../modules/notification-messages');
 
 module.exports = function verificationAprroval() {
   return async context => {
     const teacherSettings = context.app.get('appSettings').teacher;
     const { achievement } = teacherSettings;
     const { subdocumentId } = context.params;
-    const { _id, verifications } = context.result;
+    const { _id, oneSignalIds, verifications } = context.result;
 
     if (!subdocumentId) {
       throw new BadRequest('subdocumentId is required.');
@@ -15,10 +17,25 @@ module.exports = function verificationAprroval() {
       doc._id.equals(subdocumentId)
     )[0];
     const { status, type } = verification;
+    const config = context.app.get('oneSignal').teacher;
 
     switch (status) {
       case 'rejected':
         // send notification
+        const m_verificationType = type;
+        const {
+          headings,
+          contents,
+          data,
+        } = messageList.teacher.verification.rejected;
+
+        sendNotification({
+          config,
+          targetIds: oneSignalIds,
+          headings: JSON.parse(eval(headings)),
+          contents: JSON.parse(eval(contents)),
+          data: { ...data, id: matchingId },
+        });
         break;
 
       case 'approved':

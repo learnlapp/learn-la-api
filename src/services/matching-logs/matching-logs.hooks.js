@@ -12,7 +12,7 @@ const {
 
 const { isAction } = require('../../hooks');
 
-const { saveLatestLogTime } = require('./hooks/after');
+const { saveLatestLogTime, sendPushNotification } = require('./hooks/after');
 
 module.exports = {
   before: {
@@ -36,7 +36,7 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [saveLatestLogTime()],
+    create: [sendPushNotification(), saveLatestLogTime()],
     update: [],
     patch: [],
     remove: [],
