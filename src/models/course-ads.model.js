@@ -40,5 +40,6 @@ module.exports = function(app) {
     }
   );
 
+  courseAds.index({ teacherId: 1 });
   return mongooseClient.model('courseAds', courseAds);
 };

@@ -39,5 +39,6 @@ module.exports = function(app) {
     }
   );
 
+  // studentAds.index({ })
   return mongooseClient.model('studentAds', studentAds);
 };

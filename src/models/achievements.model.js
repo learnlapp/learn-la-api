@@ -19,5 +19,6 @@ module.exports = function(app) {
     }
   );
 
+  achievements.index({ ownerType: 1, ownerId: 1 });
   return mongooseClient.model('achievements', achievements);
 };

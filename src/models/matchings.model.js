@@ -49,5 +49,7 @@ module.exports = function(app) {
     }
   );
 
+  matchings.index({ studentId: 1 });
+  matchings.index({ teacherId: 1 });
   return mongooseClient.model('matchings', matchings);
 };

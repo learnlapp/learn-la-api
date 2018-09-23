@@ -16,5 +16,6 @@ module.exports = function(app) {
     }
   );
 
+  matchingLogs.index({ to: 1, matchingId: 1 });
   return mongooseClient.model('matchingLogs', matchingLogs);
 };

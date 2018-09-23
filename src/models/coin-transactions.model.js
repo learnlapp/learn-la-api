@@ -23,5 +23,6 @@ module.exports = function(app) {
     }
   );
 
+  coinTransactions.index({ ownerType: 1, ownerId: 1 });
   return mongooseClient.model('coinTransactions', coinTransactions);
 };
