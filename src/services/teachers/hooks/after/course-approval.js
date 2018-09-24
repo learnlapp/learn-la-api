@@ -16,7 +16,7 @@ module.exports = function courseApproval() {
     const course = courses.filter(doc => doc._id.equals(subdocumentId))[0];
     const { status, category, title, level } = course;
     const config = context.app.get('oneSignal').teacher;
-    const m_verificationType = category + title + level;
+    const m_verificationType = `${category}${title}證明`;
     const message = messageList.teacher.verification;
 
     switch (status) {

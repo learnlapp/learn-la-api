@@ -34,7 +34,7 @@ module.exports = {
       viewVerificationMsg: {
         headings: '`{ "en": "收到答覆"}`',
         contents:
-          '`{ "en": "${m_from}已按你要求，提交(name)認證，並經由我們審核通過！立即回來查看！" }`',
+          '`{ "en": "${m_from}已按你要求，提交${m_verificationType}認證，並經由我們審核通過！立即回來查看！" }`',
         data: { route: 'ChatScreen' },
       },
     },
@@ -90,7 +90,7 @@ module.exports = {
       requestVerificationMsg: {
         headings: '`{ "en": "收到請求"}`',
         contents:
-          '`{ "en": "${m_from}請你提供(name)認證，請即回來提交以便確認個案！" }`',
+          '`{ "en": "${m_from}請你提供${m_verificationType}認證，請即回來提交以便確認個案！" }`',
         data: { route: 'ChatScreen' },
       },
       viewVerificationMsg: {

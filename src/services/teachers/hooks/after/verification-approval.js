@@ -1,6 +1,7 @@
 const { BadRequest, GeneralError } = require('@feathersjs/errors');
 const { sendNotification } = require('../../../../modules/oneSignal');
 const messageList = require('../../../../modules/notification-messages');
+const verificationTypes = require('../../../../modules/verification-types');
 
 module.exports = function verificationAprroval() {
   return async context => {
@@ -18,7 +19,7 @@ module.exports = function verificationAprroval() {
     )[0];
     const { status, type } = verification;
     const config = context.app.get('oneSignal').teacher;
-    const m_verificationType = type;
+    const m_verificationType = verificationTypes[type];
     const message = messageList.teacher.verification;
 
     switch (status) {
@@ -87,7 +88,7 @@ module.exports = function verificationAprroval() {
                   from: 'teacher',
                   to: 'student',
                   logId: 'viewVerificationMsg',
-                  extra: { type: 'id' },
+                  extra: { type },
                 });
               }
             } catch (err) {
