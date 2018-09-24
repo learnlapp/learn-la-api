@@ -11,8 +11,9 @@ module.exports = function sendPushNotification() {
       matching = await context.app
         .service('matchings')
         .get(matchingId, { fastJoinQuery: { student: 1, teacher: 1 } });
+      console.log('matching', matching);
 
-      if (!matching.length) {
+      if (!matching) {
         console.error(
           'matching not found, unable to send push notification to user.'
         );
