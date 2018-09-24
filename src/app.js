@@ -19,9 +19,7 @@ const mongoose = require('./mongoose');
 const authentication = require('./authentication');
 const twillio = require('./twillio');
 const globalVars = require('./globalVars');
-
 const verifyPhone = require('./twillio/verify-phone');
-const oneSignal_test = require('./oneSignal/oneSignal_test');
 
 const app = express(feathers());
 
