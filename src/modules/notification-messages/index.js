@@ -42,15 +42,14 @@ module.exports = {
     //
     verification: {
       approved: {
-        headings: '{ en: `收到審核結果` }',
-        contents: '`{ en: `${m_verificationType}認證已通過審核。` }`',
+        headings: '`{ "en": "收到審核結果" }`',
+        contents: '`{ "en": "${m_verificationType}認證已通過審核。" }`',
         data: { route: 'ProfileVerificationsScreen' },
       },
       rejected: {
-        headings: `'{ "en": "收到審核結果" }'`,
-        contents: `'{
-          "en": "${m_verificationType}認證未能通過審核，請回來重新提交。"
-        }'`,
+        headings: '`{ "en": "收到審核結果" }`',
+        contents:
+          '`{ "en": "${m_verificationType}認證未能通過審核，請回來重新提交。" }`',
         data: { route: 'ProfileVerificationsScreen' },
       },
     },
@@ -109,10 +108,9 @@ module.exports = {
         data: { route: 'ProfileVerificationsScreen' },
       },
       rejected: {
-        headings: `'{ "en": "收到審核結果" }'`,
-        contents: `'{
-          "en": "${m_verificationType}認證未能通過審核，請回來重新提交。"
-        }'`,
+        headings: '`{ "en": "收到審核結果" }`',
+        contents:
+          '`{ "en": "${m_verificationType}認證未能通過審核，請回來重新提交。" }`',
         data: { route: 'ProfileVerificationsScreen' },
       },
     },
