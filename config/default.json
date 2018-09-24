@@ -12,12 +12,12 @@
   },
   "oneSignal": {
     "student": {
-      "appId": "ONESIGNAL_APP_IDe_STUDENT",
-      "apiKey": "ONESIGNAL_API_KEY_TEACHER"
+      "appId": "ONESIGNAL_APP_ID_STUDENT",
+      "apiKey": "ONESIGNAL_API_KEY_STUDENT"
     },
     "teacher": {
       "appId": "ONESIGNAL_APP_ID_TEACHER",
-      "apiKey": "ONESIGNAL_API_KEY_STUDENT"
+      "apiKey": "ONESIGNAL_API_KEY_TEACHER"
     }
   },
   "mongodb": "mongodb://localhost:27017/learn_la",
