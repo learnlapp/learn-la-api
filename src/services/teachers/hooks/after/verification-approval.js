@@ -19,7 +19,7 @@ module.exports = function verificationAprroval() {
     )[0];
     const { status, type } = verification;
     const config = context.app.get('oneSignal').teacher;
-    const m_verificationType = verificationTypes[type];
+    const m_verificationType = verificationTypes.teacher[type];
     const message = messageList.teacher.verification;
 
     switch (status) {

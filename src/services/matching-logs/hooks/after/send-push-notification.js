@@ -24,7 +24,7 @@ module.exports = function sendPushNotification() {
           extra.course.title
         }證明`;
       } else {
-        m_verificationType = verificationTypes[extra.type];
+        m_verificationType = verificationTypes[to][extra.type];
       }
     }
 
