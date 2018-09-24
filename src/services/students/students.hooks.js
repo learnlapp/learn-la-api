@@ -123,15 +123,16 @@ module.exports = {
     ],
     get: [],
     create: [
-      iff(isNot(isAction('facebook-sign-up')), [
-        createAchievementForPhoneAssociated(),
-      ]),
+      // iff(isNot(isAction('facebook-sign-up')), [
+      //   createAchievementForPhoneAssociated(),
+      // ]),
     ],
     update: [],
     patch: [
       iff(isAction('set-profile-complete'), [
         initStudentDefaultValues(),
         giveCoinsForStudentProfileCompletion(),
+        createAchievementForPhoneAssociated(),
       ]),
       iff(isAction('reset-password'), keep('_id')),
       iff(isAction('verification-approval'), [verificationApproval()]),

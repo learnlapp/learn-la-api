@@ -11,7 +11,6 @@ module.exports = function sendPushNotification() {
       matching = await context.app
         .service('matchings')
         .get(matchingId, { fastJoinQuery: { student: 1, teacher: 1 } });
-      console.log('matching', matching);
 
       if (!matching) {
         console.error(
@@ -32,7 +31,7 @@ module.exports = function sendPushNotification() {
           extra.course.title
         }證明`;
       } else {
-        m_verificationType = verificationTypes[to][extra.type];
+        m_verificationType = verificationTypes[from][extra.type];
       }
     }
 
