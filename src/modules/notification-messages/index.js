@@ -40,6 +40,18 @@ module.exports = {
     },
     //
     //
+    reminder: {
+      matching: {
+        oneHourLeft: {
+          headings: '`{ "en": "學野喇提提你！"}`',
+          contents:
+            '`{ "en": "與${m_from}對話尚餘1小時，趕快交換電話，否則將自動取消個案！" }`',
+          data: { route: 'ChatScreen' },
+        },
+      },
+    },
+    //
+    //
     verification: {
       approved: {
         headings: '`{ "en": "收到審核結果" }`',
@@ -97,6 +109,18 @@ module.exports = {
         contents:
           '`{ "en": "${m_from}已按你要求，提交${m_verificationType}認證，並經由我們審核通過！立即回來查看！" }`',
         data: { route: 'ChatScreen' },
+      },
+    },
+    //
+    //
+    reminder: {
+      matching: {
+        oneHourLeft: {
+          headings: '`{ "en": "學野喇提提你！"}`',
+          contents:
+            '`{ "en": "與${m_from}對話尚餘1小時，趕快交換電話，否則將自動取消個案！" }`',
+          data: { route: 'ChatScreen' },
+        },
       },
     },
     //

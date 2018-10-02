@@ -9,12 +9,6 @@ async function sendNotification(params = {}) {
   try {
     const { config, targetIds, headings, contents, data } = params;
 
-    console.log('targetIds', targetIds);
-    console.log('platform', config);
-    console.log('headings', headings);
-    console.log('contents', contents);
-    console.log('data', data);
-
     if (!config) {
       throw new Error('config is required.');
     }
@@ -58,7 +52,6 @@ async function sendNotification(params = {}) {
         ios_badgeCount: 1,
       },
     });
-    console.log('resp', response.data);
 
     return response;
   } catch (err) {

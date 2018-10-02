@@ -20,7 +20,11 @@ const {
   exchangePhoneCheck,
 } = require('./hooks/before');
 
-const { chargeCoinsForMatching, initLogMsg } = require('./hooks/after');
+const {
+  chargeCoinsForMatching,
+  initLogMsg,
+  scheduleTasks,
+} = require('./hooks/after');
 
 const resolvers = require('./resolvers');
 
@@ -54,6 +58,7 @@ module.exports = {
       chargeCoinsForMatching(),
       initLogMsg(),
       fastJoin(resolvers, setFastJoinQuery()),
+      scheduleTasks(),
     ],
     update: [],
     patch: [fastJoin(resolvers, setFastJoinQuery())],

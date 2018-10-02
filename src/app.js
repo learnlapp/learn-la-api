@@ -20,6 +20,15 @@ const authentication = require('./authentication');
 const twillio = require('./twillio');
 const globalVars = require('./globalVars');
 const verifyPhone = require('./twillio/verify-phone');
+const agenda = require('./modules/agenda');
+
+(async () => {
+  try {
+    await agenda.start();
+  } catch (err) {
+    console.log(err);
+  }
+})();
 
 const app = express(feathers());
 
