@@ -8,7 +8,7 @@ const agenda = new Agenda({
     address: mongoConnectionString,
     collection: 'agenda-jobs',
     options: { useNewUrlParser: true },
-    processEvery: '1 day',
+    processEvery: '1 hour',
   },
 });
 
