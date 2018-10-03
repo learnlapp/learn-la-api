@@ -23,7 +23,7 @@ const {
 const {
   chargeCoinsForMatching,
   initLogMsg,
-  scheduleTasks,
+  setupScheduleTasks,
 } = require('./hooks/after');
 
 const resolvers = require('./resolvers');
@@ -58,7 +58,7 @@ module.exports = {
       chargeCoinsForMatching(),
       initLogMsg(),
       fastJoin(resolvers, setFastJoinQuery()),
-      scheduleTasks(),
+      setupScheduleTasks(),
     ],
     update: [],
     patch: [fastJoin(resolvers, setFastJoinQuery())],

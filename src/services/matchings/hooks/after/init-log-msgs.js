@@ -3,11 +3,11 @@ module.exports = function initLogMsgs() {
     const { _id, type } = context.result;
 
     let from;
-    if (type === 'course') {
+    if (type === 'courseAd') {
       from = 'student';
     }
 
-    if (type === 'student') {
+    if (type === 'studentAd') {
       from = 'teacher';
     }
 

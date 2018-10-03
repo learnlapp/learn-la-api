@@ -1,7 +1,7 @@
 const Agenda = require('agenda');
 
-// const mongoConnectionString = process.env.AGENDA_JOBS_DB_URL;
-const mongoConnectionString = 'mongodb://localhost:27017/learn_la';
+const mongoConnectionString = process.env.MONGO_URL;
+// const mongoConnectionString = 'mongodb://localhost:27017/learn_la';
 
 const agenda = new Agenda({
   db: {

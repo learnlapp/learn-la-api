@@ -25,7 +25,7 @@ module.exports = function associateRelevantIds() {
 
       context.data = {
         ...context.data,
-        type: 'course',
+        type: 'courseAd',
         teacherId,
         studentId: payload.studentId,
       };
@@ -40,7 +40,7 @@ module.exports = function associateRelevantIds() {
 
       context.data = {
         ...context.data,
-        type: 'student',
+        type: 'studentAd',
         teacherId: payload.teacherId,
         studentId,
       };
