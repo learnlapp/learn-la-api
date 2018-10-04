@@ -35,8 +35,10 @@ module.exports = function sendPushNotification() {
       }
     }
 
-    const { headings, contents, data } = messageList[to].matchingLog[logId];
+    // const { headings, contents, data } = messageList[to].matchingLog[logId];
     if (from !== to) {
+      const { headings, contents, data } = messageList[to].matchingLog[logId];
+
       sendNotification({
         config,
         targetIds: oneSignalIds,
