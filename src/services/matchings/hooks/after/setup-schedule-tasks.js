@@ -1,8 +1,9 @@
-const agenda = require('../../../../modules/agenda');
+// const agenda = require('../../../../modules/agenda');
 const messageList = require('../../../../modules/notification-messages');
 
 module.exports = function setupScheduleTasks() {
   return context => {
+    const agenda = context.app.get('agenda');
     const { type } = context.result;
     let message, to;
 

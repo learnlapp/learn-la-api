@@ -22,13 +22,13 @@ const globalVars = require('./globalVars');
 const verifyPhone = require('./twillio/verify-phone');
 const agenda = require('./modules/agenda');
 
-(async () => {
-  try {
-    await agenda.start();
-  } catch (err) {
-    console.log(err);
-  }
-})();
+// (async () => {
+//   try {
+//     await agenda.start();
+//   } catch (err) {
+//     console.log(err);
+//   }
+// })();
 
 const app = express(feathers());
 
@@ -48,6 +48,7 @@ app.use('/', express.static(app.get('public')));
 app.configure(express.rest());
 app.configure(socketio());
 
+app.configure(agenda);
 app.configure(mongoose);
 app.configure(twillio);
 

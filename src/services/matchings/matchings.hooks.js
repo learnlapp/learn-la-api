@@ -11,7 +11,7 @@ const {
   preventChanges,
 } = require('feathers-hooks-common');
 
-const { setExpiredAfter, setFastJoinQuery } = require('../../hooks');
+const { isAction, setExpiredAfter, setFastJoinQuery } = require('../../hooks');
 
 const {
   associateRelevantIds,
@@ -23,6 +23,7 @@ const {
 const {
   chargeCoinsForMatching,
   initLogMsg,
+  scheduleResultInquiryMsg,
   setupScheduleTasks,
 } = require('./hooks/after');
 
@@ -61,7 +62,10 @@ module.exports = {
       setupScheduleTasks(),
     ],
     update: [],
-    patch: [fastJoin(resolvers, setFastJoinQuery())],
+    patch: [
+      fastJoin(resolvers, setFastJoinQuery()),
+      iff(isAction('accepted-phone-request'), scheduleResultInquiryMsg()),
+    ],
     remove: [],
   },
 
