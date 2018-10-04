@@ -3,14 +3,14 @@ module.exports = function scheduleResultInquiryMsg() {
     const { _id } = context.result;
     const agenda = context.app.get('agenda');
 
-    agenda.schedule('30 seconds', 'sendMatchingLog', {
+    agenda.schedule('after 3 minutes', 'sendMatchingLog', {
       matchingId: _id,
       from: 'student',
       to: 'student',
       logId: 'resultInquiryMsg',
     });
 
-    agenda.schedule('30 seconds', 'sendMatchingLog', {
+    agenda.schedule('after 3 minutes', 'sendMatchingLog', {
       matchingId: _id,
       from: 'teacher',
       to: 'teacher',

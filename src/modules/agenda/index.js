@@ -11,10 +11,14 @@ module.exports = async function(app) {
       },
     });
 
-    agenda.define('sendMatchingLog', job => {
-      console.log('sending resultInquiryMsg');
-
-      app.service('matching-logs').create(job.attrs.data);
+    agenda.define('sendMatchingLog', async job => {
+      try {
+        console.log('sending resultInquiryMsg');
+        await app.service('matching-logs').create(job.attrs.data);
+        await job.remove();
+      } catch (err) {
+        console.log('sendMatchingLog error: ', err);
+      }
     });
 
     await agenda.start();
