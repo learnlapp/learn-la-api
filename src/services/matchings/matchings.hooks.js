@@ -64,8 +64,6 @@ module.exports = {
     update: [],
     patch: [
       fastJoin(resolvers, setFastJoinQuery()),
-      ctx => console.log('parasms', ctx.params.action),
-
       iff(isAction('accepted-phone-request'), scheduleResultInquiryMsg()),
     ],
     remove: [],

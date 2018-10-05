@@ -19,14 +19,14 @@ module.exports = function setupScheduleTasks() {
       from = 'teacher';
     }
 
-    agenda.schedule('after 2 minutes', 'sendOneHourLeftReminder', {
+    agenda.schedule('after 5 minutes', 'sendOneHourLeftReminder', {
       matching: context.result,
       message,
       to,
       from,
     });
 
-    agenda.schedule('after 5 minutes', 'autoArchiveMatching', {
+    agenda.schedule('after 10 minutes', 'autoArchiveMatching', {
       matching: context.result,
     });
 
